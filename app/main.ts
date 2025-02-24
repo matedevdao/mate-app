@@ -10,3 +10,7 @@ nft.style({
   width: "300px",
   height: "300px",
 });
+
+for (let i = 0; i < 100; i += 1) {
+  //new KaiaNFTDisplay(SupportedCollections.DogeSoundClubMates, BigInt(i));
+}
