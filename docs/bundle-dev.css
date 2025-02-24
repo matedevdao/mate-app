@@ -134,4 +134,12 @@ meter {
 :root {
   --primary-color: #f7d602;
 }
+.kaia-nft-display > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.kaia-nft-display > img.pixel-art {
+  image-rendering: pixelated;
+}
 
