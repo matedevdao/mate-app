@@ -20,9 +20,9 @@ nft.style({
 }
 */
 
-const tokenIds: number[] = [];
-for (let i = 0; i < 1000; i += 1) {
-  tokenIds.push(i);
+const tokenIds: bigint[] = [];
+for (let i = 1000; i < 2000; i += 1) {
+  tokenIds.push(BigInt(i));
 }
 
 console.log(
