@@ -1,4 +1,4 @@
-import { BodyNode } from "@common-module/app";
+import { BodyNode } from "@commonmodule/app";
 import { KaiaNFTDisplay, ParsingNFTDataContract, SupportedCollections, } from "matedevdao-common";
 const nft = new KaiaNFTDisplay(SupportedCollections.DogeSoundClubMates, 1n)
     .appendTo(BodyNode);
