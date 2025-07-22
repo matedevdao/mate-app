@@ -1,13 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<title>Redirecting…</title>
+  <meta charset="UTF-8">
+  <title>Redirecting…</title>
 </head>
+
 <body>
-<script>
-  // 원래 요청한 경로 유지하면서 index.html 로드
-  location.replace('/?p=' + encodeURIComponent(location.pathname + location.search + location.hash));
-</script>
+  <script>
+    const base = '/mate-app/';
+
+    let path = location.pathname;
+    // base가 포함돼 있으면 제거
+    if (path.startsWith(base)) {
+      path = path.slice(base.length - 1); // -1 해서 앞의 '/' 포함
+    }
+
+    location.replace(
+      base + '?p=' + encodeURIComponent(path + location.search + location.hash)
+    );
+  </script>
 </body>
+
 </html>
