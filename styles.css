@@ -2301,6 +2301,12 @@ ion-modal ion-content {
   --color: var(--sl-color-neutral-900);
 }
 
+img.jazzicon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
 .login-wrapper {
   display: flex;
   box-sizing: border-box;
@@ -2315,6 +2321,7 @@ ion-modal ion-content {
 .login-logo {
   width: 120px;
   height: 120px;
+  border-radius: 8px;
 }
 .login-title {
   font-size: 24px;
