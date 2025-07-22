@@ -78,15 +78,6 @@ router.on('/', () => {
   requireAuth(() => renderContent(createHomeView(router)));
 });
 
-router.on('/:roomId', (match) => {
-  const roomId = match?.data?.roomId;
-  if (roomId) {
-    renderContent(createChatRoomView(router, roomId));
-  } else {
-    router.navigate('/');
-  }
-});
-
 router.on('/login', () => {
   if (layoutView) {
     layoutView.remove();
@@ -98,6 +89,15 @@ router.on('/login', () => {
     router.navigate('/');
   } else {
     renderLogin();
+  }
+});
+
+router.on('/:roomId', (match) => {
+  const roomId = match?.data?.roomId;
+  if (roomId) {
+    renderContent(createChatRoomView(router, roomId));
+  } else {
+    router.navigate('/');
   }
 });
 

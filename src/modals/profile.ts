@@ -1,6 +1,6 @@
 import { el } from "@webtaku/el";
 import Navigo from "navigo";
-import { getAddress } from "viem";
+import { getAddress, zeroAddress } from "viem";
 import { logout } from "../auth/logout";
 import { TokenManager } from "../auth/token-mananger";
 import { createJazzicon } from "../components/jazzicon";
@@ -9,7 +9,8 @@ import { shortenAddress } from "../utils/address";
 import { createProfileFormModal } from "./profile-form";
 
 function createProfileModal(router: Navigo): HTMLElement {
-  const myAddress = getAddress(TokenManager.getAddress() || '');
+  const _addr = TokenManager.getAddress();
+  const myAddress = _addr ? getAddress(_addr) : zeroAddress;
   const token = TokenManager.getToken() || '';
 
   const avatar = createJazzicon(myAddress);
