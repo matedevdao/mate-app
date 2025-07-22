@@ -3,9 +3,9 @@
  "version": "0.0.1",
  "private": true,
  "scripts": {
-  "build": "webpack --mode=production",
-  "dev": "webpack serve --watch --mode=development",
-  "start": "webpack serve --watch --mode=development",
+  "build": "NODE_ENV=production webpack --mode=production",
+  "dev": "NODE_ENV=development webpack serve --watch --mode=development",
+  "start": "NODE_ENV=development webpack serve --watch --mode=development",
   "test": "vitest",
   "predeploy": "yarn build",
   "deploy": "gh-pages -d public"

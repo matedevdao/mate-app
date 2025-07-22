@@ -48,6 +48,7 @@ module.exports = {
   plugins: [
     new MiniCssExtractPlugin({ filename: 'styles.css' }),
     new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
       API_URI: JSON.stringify(
         process.env.NODE_ENV === 'production'
           ? 'api.matedevdao.workers.dev'
