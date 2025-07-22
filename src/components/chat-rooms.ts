@@ -6,9 +6,9 @@ import kcdKongzAvatar from './chat-rooms-avatars/kcd-kongz.png';
 import mateAvatar from './chat-rooms-avatars/mate.png';
 import sparrowAvatar from './chat-rooms-avatars/sparrow.png';
 import { Component } from './component';
-import { checkChatAccess } from '../api/chat-access';
 import { TokenManager } from '../auth/token-mananger';
 import { zeroAddress } from 'viem';
+import { fetchNftOwnershipStats } from '../api/nft-ownership-stats';
 
 function createChatRooms(): Component {
   const list = el('ion-content', { className: 'chat-rooms' });
@@ -18,7 +18,6 @@ function createChatRooms(): Component {
       ids: ['dogesoundclub-mates', 'dogesoundclub-e-mates', 'dogesoundclub-biased-mates'],
       name: '메이트 홀더 모임',
       avatars: [mateAvatar, emateAvatar, bmcsAvatar],
-      holderCount: 120,
       lastMessage: '',
       lastMessageTime: '',
       purchaseUrls: [
@@ -31,7 +30,6 @@ function createChatRooms(): Component {
       ids: ['sigor-sparrows'],
       name: '시고르 참새 홀더 모임',
       avatars: [sparrowAvatar],
-      holderCount: 87,
       lastMessage: '',
       lastMessageTime: '',
       purchaseUrls: [
@@ -42,7 +40,6 @@ function createChatRooms(): Component {
       ids: ['kingcrowndao-kongz'],
       name: 'KCD 콩즈 홀더 모임',
       avatars: [kcdKongzAvatar],
-      holderCount: 45,
       lastMessage: '방금 들어왔습니다!',
       lastMessageTime: '2025-07-22 14:30',
       purchaseUrls: [
@@ -53,7 +50,6 @@ function createChatRooms(): Component {
       ids: ['babyping'],
       name: '베이비핑 홀더 모임',
       avatars: [babypingAvatar],
-      holderCount: 60,
       lastMessage: '',
       lastMessageTime: '',
       purchaseUrls: [
@@ -137,7 +133,7 @@ function createChatRooms(): Component {
       }
     });
 
-    const holderInfo = el('div', `홀더 ${nft.holderCount}명`);
+    const holderInfo = el('div', `홀더 …명`);
     infoSection.appendChild(holderInfo);
 
     const button = el('ion-button', {
@@ -156,10 +152,19 @@ function createChatRooms(): Component {
 
   const address = TokenManager.getAddress() ?? zeroAddress;
 
-  checkChatAccess(address).then(result => {
+  fetchNftOwnershipStats(address).then(result => {
     nfts.forEach((nft, idx) => {
       const btn = buttons[idx];
-      const canAccess = nft.ids.some(id => result[id]);
+      const canAccess = nft.ids.some(id => result[id]?.owned);
+      const totalHolders = nft.ids.reduce((acc, id) => {
+        if (result[id]?.totalHolders) {
+          return acc + result[id].totalHolders;
+        }
+        return acc;
+      }, 0);
+
+      const holderInfo = btn.parentElement?.querySelector<HTMLDivElement>('div');
+      if (holderInfo) holderInfo.textContent = `홀더 ${totalHolders}명`;
 
       btn.textContent = canAccess ? '입장하기' : 'NFT 구매하기';
       btn.color = canAccess ? 'primary' : 'secondary';
