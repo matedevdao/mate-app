@@ -51,7 +51,7 @@ module.exports = {
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
       API_URI: JSON.stringify(
         process.env.NODE_ENV === 'production'
-          ? 'https://api.matedevdao.workers.dev'
+          ? 'https://api-v2.matedevdao.workers.dev'
           : 'http://localhost:8082'
       )
     })
