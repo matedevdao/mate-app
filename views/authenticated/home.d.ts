@@ -1,4 +1,5 @@
 import { View } from '../view';
-declare function createHomeView(): View;
+import Navigo from 'navigo';
+declare function createHomeView(router: Navigo): View;
 export { createHomeView };
 //# sourceMappingURL=home.d.ts.map

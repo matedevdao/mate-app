@@ -1,4 +1,5 @@
 import { Component } from './component';
-declare function createChatRooms(): Component;
+import Navigo from 'navigo';
+declare function createChatRooms(router: Navigo): Component;
 export { createChatRooms };
 //# sourceMappingURL=chat-rooms.d.ts.map
