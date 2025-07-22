@@ -34,8 +34,6 @@ async function handleLoginClick(router: Navigo) {
 }
 
 export function createLoginView(router: Navigo): View {
-  const title = el('h1.login-title', 'Mate');
-
   const logo = el('img.login-logo', {
     src: logoImage,
     alt: 'Mate App Logo',
@@ -43,7 +41,7 @@ export function createLoginView(router: Navigo): View {
 
   const description = el(
     'p.login-description',
-    '지갑을 연결하고 메시지에 서명해\nMate에 접속하세요.'
+    '지갑을 연결하고 메시지에 서명해\nMate에 접속하세요.',
   );
 
   const connectButton = el(
@@ -82,11 +80,18 @@ export function createLoginView(router: Navigo): View {
 
   const wrapper = el(
     '.login-wrapper',
-    title,
     logo,
     description,
+    el(
+      'sl-alert.klip-alert',
+      {
+        open: true,
+      },
+      el('sl-icon', { slot: 'icon', name: 'info-circle' }),
+      'Klip을 사용하시는 경우, WalletConnect를 통해 접속해주세요.'
+    ),
     connectButton,
-    signButton
+    signButton,
   );
 
   const unwatch = watchAccount(wagmiConfig, {

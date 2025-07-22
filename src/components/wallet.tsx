@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { lightTheme, getDefaultWallets, RainbowKitProvider, useConnectModal } from '@rainbow-me/rainbowkit';
+import { connectorsForWallets, lightTheme, RainbowKitProvider, useConnectModal } from '@rainbow-me/rainbowkit';
+import { kaiaWallet, metaMaskWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wallets';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { el } from '@webtaku/el';
 import {
@@ -9,20 +10,25 @@ import {
   http,
   WagmiProvider
 } from 'wagmi';
-import { mainnet } from 'wagmi/chains';
+import { kaia } from 'wagmi/chains';
 
 const queryClient = new QueryClient();
 
 // wagmi + rainbowkit 최신 설정
-const { connectors } = getDefaultWallets({
-  appName: 'Valhalla',
-  projectId: '9a637488c787c2c68339c70e1319ac6a',
+const connectors = connectorsForWallets([
+  {
+    groupName: 'Recommended',
+    wallets: [kaiaWallet, metaMaskWallet, walletConnectWallet],
+  },
+], {
+  appName: 'Mate',
+  projectId: 'faa5a33f9f8688fcb9bc3c412e6a8ddb',
 });
 
 const config = createConfig({
-  chains: [mainnet],
+  chains: [kaia],
   transports: {
-    [mainnet.id]: http(), // RPC를 설정
+    [kaia.id]: http(), // RPC를 설정
   },
   connectors,
   ssr: false, // (선택) SSR 사용하지 않을 경우
