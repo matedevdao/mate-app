@@ -1,4 +1,4 @@
-"use strict";(self.webpackChunkmate_app=self.webpackChunkmate_app||[]).push([[4748],{84748:(e,l,a)=>{a.r(l),a.d(l,{infoCircleSvg:()=>r});const r=a(12618).JW`<svg fill="none" viewBox="0 0 14 15">
+"use strict";(self.webpackChunkmate_app=self.webpackChunkmate_app||[]).push([[4748],{4748:(e,l,a)=>{a.r(l),a.d(l,{infoCircleSvg:()=>r});const r=a(2618).JW`<svg fill="none" viewBox="0 0 14 15">
   <path
     fill="currentColor"
     d="M6 10.49a1 1 0 1 0 2 0v-2a1 1 0 0 0-2 0v2ZM7 4.49a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"
