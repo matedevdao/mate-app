@@ -1,4 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Redirecting…</title>
+</head>
+<body>
 <script>
-    sessionStorage.__spa_path = location.pathname + location.search;
-    location.replace('/mate-app/');
+  // 원래 요청한 경로 유지하면서 index.html 로드
+  location.replace('/?p=' + encodeURIComponent(location.pathname + location.search + location.hash));
 </script>
+</body>
+</html>

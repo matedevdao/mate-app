@@ -12,6 +12,14 @@ import { View } from './views/view';
 defineCustomElements(window);
 document.body.appendChild(createRainbowKit());
 
+const params = new URLSearchParams(location.search);
+const p = params.get('p');
+
+if (p) {
+  // 쿼리스트링을 클리어하고, 라우터로 이동
+  history.replaceState({}, '', p);
+}
+
 const router = new Navigo(process.env.NODE_ENV === 'production' ? '/mate-app/' : '/');
 
 let layoutView: View | undefined;
