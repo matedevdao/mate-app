@@ -9,6 +9,7 @@ import { showErrorAlert } from '../../components/alert';
 import { openWalletConnectModal, wagmiConfig } from '../../components/wallet';
 import { View } from '../view';
 import './login.less';
+import logoImage from './logo.png';
 
 async function ensureWalletConnected(): Promise<`0x${string}`> {
   const account = getAccount(wagmiConfig);
@@ -34,6 +35,11 @@ async function handleLoginClick(router: Navigo) {
 
 export function createLoginView(router: Navigo): View {
   const title = el('h1.login-title', 'Mate');
+
+  const logo = el('img.login-logo', {
+    src: logoImage,
+    alt: 'Mate App Logo',
+  });
 
   const description = el(
     'p.login-description',
@@ -77,6 +83,7 @@ export function createLoginView(router: Navigo): View {
   const wrapper = el(
     '.login-wrapper',
     title,
+    logo,
     description,
     connectButton,
     signButton

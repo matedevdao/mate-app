@@ -10,6 +10,7 @@ import { createLoginView } from './views/unauthenticated/login';
 import { View } from './views/view';
 
 defineCustomElements(window);
+document.documentElement.setAttribute('mode', 'ios');
 document.body.appendChild(createRainbowKit());
 
 const params = new URLSearchParams(location.search);
