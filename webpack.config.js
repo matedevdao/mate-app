@@ -1,11 +1,12 @@
 const path = require('path');
+const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   entry: './src/main.ts',
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, './docs')
+    path: path.resolve(__dirname, './public')
   },
   module: {
     rules: [
@@ -45,10 +46,18 @@ module.exports = {
     extensions: ['.tsx', '.ts', '.js']
   },
   plugins: [
-    new MiniCssExtractPlugin({ filename: 'styles.css' })
+    new MiniCssExtractPlugin({ filename: 'styles.css' }),
+    new webpack.DefinePlugin({
+      API_URI: JSON.stringify(
+        process.env.NODE_ENV === 'production'
+          ? 'api.matedevdao.workers.dev'
+          : 'http://localhost:8082'
+      )
+    })
   ],
   devServer: {
-    static: './docs',
+    static: './public',
+    historyApiFallback: true,
     client: {
       overlay: false,
       logging: 'none'

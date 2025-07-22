@@ -20,7 +20,7 @@
     "skipLibCheck": true,
     "strict": true,
     "rootDir": "./src",
-    "outDir": "docs"
+    "outDir": "public"
   },
   "include": [
     "./src",
@@ -28,6 +28,6 @@
   "exclude": [
     "node_modules",
     "**/dist/**",
-    "docs"
+    "public"
   ],
 }
