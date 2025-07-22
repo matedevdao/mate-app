@@ -4,6 +4,7 @@ import { TokenManager } from './auth/token-mananger';
 import { validateToken } from './auth/validate';
 import { createRainbowKit } from './components/wallet';
 import './main.less';
+import { createChatRoomView } from './views/authenticated/chatroom';
 import { createHomeView } from './views/authenticated/home';
 import { createLayoutView } from './views/authenticated/layout';
 import { createLoginView } from './views/unauthenticated/login';
@@ -74,7 +75,16 @@ function renderLogin() {
 
 router.on('/', () => {
   removeLoginView();
-  requireAuth(() => renderContent(createHomeView()));
+  requireAuth(() => renderContent(createHomeView(router)));
+});
+
+router.on('/:roomId', (match) => {
+  const roomId = match?.data?.roomId;
+  if (roomId) {
+    renderContent(createChatRoomView(router, roomId));
+  } else {
+    router.navigate('/');
+  }
 });
 
 router.on('/login', () => {

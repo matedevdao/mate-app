@@ -31,6 +31,8 @@ export function createProfileFormModal(address: string, token: string) {
 
   saveBtn.onclick = async () => {
     saveBtn.disabled = true;
+    saveBtn.textContent = ''; // 초기화
+    saveBtn.append(el('ion-spinner', { name: 'crescent' }));
     try {
       const nickname = nicknameInput.value?.toString() || '';
       const bio = bioInput.value?.toString() || '';

@@ -9,13 +9,15 @@ import { Component } from './component';
 import { TokenManager } from '../auth/token-mananger';
 import { zeroAddress } from 'viem';
 import { fetchNftOwnershipStats } from '../api/nft-ownership-stats';
+import Navigo from 'navigo';
 
-function createChatRooms(): Component {
+function createChatRooms(router: Navigo): Component {
   const list = el('ion-content', { className: 'chat-rooms' });
 
   const nfts = [
     {
       ids: ['dogesoundclub-mates', 'dogesoundclub-e-mates', 'dogesoundclub-biased-mates'],
+      roomId: 'mates',
       name: '메이트 홀더 모임',
       avatars: [mateAvatar, emateAvatar, bmcsAvatar],
       lastMessage: '',
@@ -28,6 +30,7 @@ function createChatRooms(): Component {
     },
     {
       ids: ['sigor-sparrows'],
+      roomId: 'sigor-sparrows',
       name: '시고르 참새 홀더 모임',
       avatars: [sparrowAvatar],
       lastMessage: '',
@@ -38,6 +41,7 @@ function createChatRooms(): Component {
     },
     {
       ids: ['kingcrowndao-kongz'],
+      roomId: 'kcd-kongz',
       name: 'KCD 콩즈 홀더 모임',
       avatars: [kcdKongzAvatar],
       lastMessage: '방금 들어왔습니다!',
@@ -48,6 +52,7 @@ function createChatRooms(): Component {
     },
     {
       ids: ['babyping'],
+      roomId: 'babyping',
       name: '베이비핑 홀더 모임',
       avatars: [babypingAvatar],
       lastMessage: '',
@@ -171,7 +176,7 @@ function createChatRooms(): Component {
       btn.disabled = false;
 
       if (canAccess) {
-        btn.onclick = () => alert(`${nft.name} 방에 입장합니다.`);
+        btn.onclick = () => router.navigate(`/${nft.roomId}`);
       } else {
         btn.onclick = () => {
           alert('구매 기능은 준비 중입니다.');
