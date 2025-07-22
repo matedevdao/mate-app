@@ -1,4 +1,4 @@
-"use strict";(self.webpackChunkmate_app=self.webpackChunkmate_app||[]).push([[6717],{16717:(C,e,l)=>{l.r(e),l.d(e,{arrowBottomCircleSvg:()=>o});const o=l(12618).JW`<svg
+"use strict";(self.webpackChunkmate_app=self.webpackChunkmate_app||[]).push([[6717],{6717:(C,e,l)=>{l.r(e),l.d(e,{arrowBottomCircleSvg:()=>o});const o=l(2618).JW`<svg
   fill="none"
   viewBox="0 0 21 20"
 >

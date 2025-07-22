@@ -1,4 +1,4 @@
-"use strict";(self.webpackChunkmate_app=self.webpackChunkmate_app||[]).push([[6188],{86188:(C,e,l)=>{l.r(e),l.d(e,{swapHorizontalRoundedBoldSvg:()=>L});const L=l(12618).JW`<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+"use strict";(self.webpackChunkmate_app=self.webpackChunkmate_app||[]).push([[6188],{3807:(C,e,l)=>{l.r(e),l.d(e,{swapHorizontalRoundedBoldSvg:()=>L});const L=l(2618).JW`<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
   <path 
     fill="currentColor"
     fill-rule="evenodd" 

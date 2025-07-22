@@ -1,4 +1,4 @@
-"use strict";(self.webpackChunkmate_app=self.webpackChunkmate_app||[]).push([[3071],{85452:(e,l,a)=>{a.r(l),a.d(l,{refreshSvg:()=>p});const p=a(12618).JW`<svg fill="none" viewBox="0 0 14 16">
+"use strict";(self.webpackChunkmate_app=self.webpackChunkmate_app||[]).push([[3071],{3071:(e,l,a)=>{a.r(l),a.d(l,{refreshSvg:()=>p});const p=a(2618).JW`<svg fill="none" viewBox="0 0 14 16">
   <path
     fill="currentColor"
     fill-rule="evenodd"
