@@ -10,7 +10,7 @@ import {
   http,
   WagmiProvider
 } from 'wagmi';
-import { kaia } from 'wagmi/chains';
+import { kaia, mainnet } from 'wagmi/chains';
 
 const queryClient = new QueryClient();
 
@@ -26,8 +26,9 @@ const connectors = connectorsForWallets([
 });
 
 const config = createConfig({
-  chains: [kaia],
+  chains: [mainnet, kaia],
   transports: {
+    [mainnet.id]: http(), // RPC를 설정
     [kaia.id]: http(), // RPC를 설정
   },
   connectors,
