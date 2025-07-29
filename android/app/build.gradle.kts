@@ -9,7 +9,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "matedevdao.mate"
+        applicationId = "matedevdao.mateapp"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

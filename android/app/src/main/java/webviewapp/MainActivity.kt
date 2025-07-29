@@ -57,7 +57,7 @@ class MainActivity : ComponentActivity() {
                         .imePadding()
                 ) { innerPadding ->
                     WebViewScreen(
-                        url = "https://matedevdao.github.io/mate-app/",
+                        url = "https://matedevdao.github.io/mate-app/?platform=android&source=webview",
                         modifier = Modifier.padding(innerPadding),
                         onFileChooser = { callback, intent ->
                             fileCallback?.onReceiveValue(null) // 이전 콜백 정리

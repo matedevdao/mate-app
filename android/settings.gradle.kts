@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "WebViewApp"
+rootProject.name = "Mate App"
 include(":app")

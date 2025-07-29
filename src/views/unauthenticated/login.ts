@@ -78,6 +78,14 @@ export function createLoginView(router: Navigo): View {
     '2. 메시지 서명'
   ) as SlButton;
 
+  function isAndroidWebView() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const platform = urlParams.get('platform');
+    const source = urlParams.get('source');
+
+    return platform === 'android' && source === 'webview';
+  }
+
   const wrapper = el(
     '.login-wrapper',
     logo,
@@ -88,7 +96,12 @@ export function createLoginView(router: Navigo): View {
         open: true,
       },
       el('sl-icon', { slot: 'icon', name: 'info-circle' }),
-      'Klip을 사용하시는 경우, WalletConnect를 통해 접속해주세요.'
+      isAndroidWebView() ?
+        `👋 Google Play 검토팀께,
+이 앱에 대한 접근 안내는 Play Console의 "앱 액세스 안내" 항목에 모두 작성되어 있습니다.
+앱 테스트를 위해 필요한 지침은 해당 항목을 참고해 주세요.
+검토해 주셔서 감사합니다!` :
+        'Klip을 사용하시는 경우, WalletConnect를 통해 접속해주세요.'
     ),
     connectButton,
     signButton,
