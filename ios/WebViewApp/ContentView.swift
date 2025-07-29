@@ -21,15 +21,27 @@ struct WebView: UIViewRepresentable {
     }
 
     class Coordinator: NSObject, WKNavigationDelegate {
-        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-            print("웹 페이지 로드 완료")
+        func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
+                     decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+            if let url = navigationAction.request.url {
+                print(url)
+                if url.scheme != "http" && url.scheme != "https" {
+                    // 시스템에 딥링크 URL 열기 시도
+                    if UIApplication.shared.canOpenURL(url) {
+                        UIApplication.shared.open(url)
+                        decisionHandler(.cancel)
+                        return
+                    }
+                }
+            }
+            decisionHandler(.allow)
         }
     }
 }
 
 struct ContentView: View {
     var body: some View {
-        WebView(url: URL(string: "https://www.apple.com")!)
+        WebView(url: URL(string: "https://matedevdao.github.io/mate-app/")!)
                     .edgesIgnoringSafeArea(.all) // 전체화면 사용
     }
 }
