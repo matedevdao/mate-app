@@ -9,10 +9,42 @@ import { createHomeView } from './views/authenticated/home';
 import { createLayoutView } from './views/authenticated/layout';
 import { createLoginView } from './views/unauthenticated/login';
 import { View } from './views/view';
+import { initializeApp } from 'firebase/app';
+import { getMessaging, getToken } from 'firebase/messaging';
 
 defineCustomElements(window);
 document.documentElement.setAttribute('mode', 'ios');
 document.body.appendChild(createRainbowKit());
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyBbwkLP-C61kWmzCq-pFdvSJXHHUjmoRK0',
+  authDomain: 'mate-ba361.firebaseapp.com',
+  projectId: 'mate-ba361',
+  storageBucket: 'mate-ba361.firebasestorage.app',
+  messagingSenderId: '996341622273',
+  appId: '1:996341622273:web:f1a110eea9820b30ad8200',
+  measurementId: 'G-1V0KFDFZTF'
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const messaging = getMessaging(app);
+
+async function requestNotificationPermission() {
+  return new Promise<NotificationPermission>((resolve) => {
+    Notification.requestPermission((permission) => resolve(permission));
+  });
+}
+
+/*requestNotificationPermission().then((permission) => {
+  if (permission === "granted") {
+    getToken(messaging, { vapidKey: 'BM3LFF_FNEgmlM6lvonw-qwKHQYp2tdTKuSUmo2CRi6yJwmRMyK77C2yboTUswiWGvzMad26W5GljYgMkC8lgfY' }).then((token) => {
+      console.log(token);
+    });
+  } else {
+    console.log("Permission denied:", permission);
+  }
+});*/
 
 const params = new URLSearchParams(location.search);
 const p = params.get('p');

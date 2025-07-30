@@ -11,7 +11,8 @@
     "lib": [
       "DOM",
       "ESNext",
-      "ScriptHost"
+      "ScriptHost",
+      "webworker",
     ],
     "declaration": true,
     "declarationMap": true,
@@ -19,16 +20,14 @@
     "moduleResolution": "node",
     "skipLibCheck": true,
     "strict": true,
-    "rootDir": "./src",
-    "outDir": "public"
+    "rootDir": "./",
+    "outDir": "dist"
   },
   "include": [
-    "./src",
+    "./",
   ],
   "exclude": [
     "node_modules",
     "**/dist/**",
-    "firebase-messaging-sw",
-    "public"
   ],
 }
