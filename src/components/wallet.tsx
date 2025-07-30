@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { connectorsForWallets, lightTheme, RainbowKitProvider, useConnectModal } from '@rainbow-me/rainbowkit';
-import { kaiaWallet, metaMaskWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wallets';
+import { metaMaskWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wallets';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { el } from '@webtaku/el';
 import {
@@ -11,6 +11,7 @@ import {
   WagmiProvider
 } from 'wagmi';
 import { kaia, mainnet } from 'wagmi/chains';
+import { kaiaWallet } from './kaia-wallet/kaia-wallet';
 
 const queryClient = new QueryClient();
 

@@ -15,7 +15,7 @@ export const kaiaWallet = ({
   const shouldUseWalletConnect = !isKaiaWalletInjected;
 
   const getUri = (uri: string) => {
-    return `kaikas://walletconnect?uri=${encodeURIComponent(uri)}`;
+    return `kaiawallet://walletconnect?uri=${encodeURIComponent(uri)}`;
   };
 
   return {
