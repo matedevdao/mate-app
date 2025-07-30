@@ -1,4 +1,6 @@
-import { DefaultWalletOptions, Wallet } from '@rainbow-me/rainbowkit/dist/wallets/Wallet';
-export type KaiaWalletOptions = DefaultWalletOptions;
-export declare const kaiaWallet: ({ projectId, walletConnectParameters, }: KaiaWalletOptions) => Wallet;
+import { Wallet } from "@rainbow-me/rainbowkit";
+export interface KaiaWalletOptions {
+    projectId: string;
+}
+export declare const kaiaWallet: ({ projectId, }: KaiaWalletOptions) => Wallet;
 //# sourceMappingURL=kaia-wallet.d.ts.map
