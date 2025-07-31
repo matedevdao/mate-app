@@ -19,7 +19,9 @@ setupConfig({
 });
 
 document.addEventListener('ionBackButton' as any, (event: BackButtonEvent) => {
+  console.log("1", window.history.length, document.referrer);
   event.detail.register(0, () => {
+    console.log("2", window.history.length, document.referrer);
     window.history.back();
   });
 });
