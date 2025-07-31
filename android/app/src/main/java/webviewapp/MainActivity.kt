@@ -27,6 +27,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import webviewapp.ui.theme.WebViewAppTheme
 import androidx.core.net.toUri
 
+const val MAIN_URI: String = "https://matedevdao.github.io/mate-app/?platform=android&source=webview"
+
 class MainActivity : ComponentActivity() {
     private var fileCallback: ValueCallback<Array<Uri>>? = null
 
@@ -57,7 +59,7 @@ class MainActivity : ComponentActivity() {
                         .imePadding()
                 ) { innerPadding ->
                     WebViewScreen(
-                        url = "https://matedevdao.github.io/mate-app/?platform=android&source=webview",
+                        url = MAIN_URI,
                         modifier = Modifier.padding(innerPadding),
                         onFileChooser = { callback, intent ->
                             fileCallback?.onReceiveValue(null) // 이전 콜백 정리
@@ -85,6 +87,7 @@ fun WebViewScreen(
     AndroidView(
         factory = { context ->
             WebView(context).apply {
+                setBackgroundColor(Color.BLACK)
                 settings.apply {
                     javaScriptEnabled = true
                     domStorageEnabled = true
