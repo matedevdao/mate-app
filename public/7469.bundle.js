@@ -1,4 +1,4 @@
-"use strict";(self.webpackChunkmate_app=self.webpackChunkmate_app||[]).push([[7469],{7469:(a,l,t)=>{t.r(l),t.d(l,{playStoreSvg:()=>p});const p=t(2618).JW` <svg
+"use strict";(self.webpackChunkmate_app=self.webpackChunkmate_app||[]).push([[7469],{77469:(a,l,t)=>{t.r(l),t.d(l,{playStoreSvg:()=>p});const p=t(12618).JW` <svg
   width="36"
   height="36"
   fill="none"

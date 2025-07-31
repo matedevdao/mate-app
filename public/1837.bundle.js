@@ -1,4 +1,4 @@
-"use strict";(self.webpackChunkmate_app=self.webpackChunkmate_app||[]).push([[1837],{1837:(e,C,l)=>{l.r(C),l.d(C,{clockSvg:()=>p});const p=l(2618).JW`<svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+"use strict";(self.webpackChunkmate_app=self.webpackChunkmate_app||[]).push([[1837],{41837:(e,C,l)=>{l.r(C),l.d(C,{clockSvg:()=>p});const p=l(12618).JW`<svg width="14" height="14" viewBox="0 0 14 14" fill="none">
   <path 
     fill-rule="evenodd" 
     clip-rule="evenodd" 
