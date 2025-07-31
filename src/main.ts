@@ -1,4 +1,4 @@
-import { setupConfig } from '@ionic/core';
+import { BackButtonEvent, setupConfig } from '@ionic/core';
 import { defineCustomElements } from '@ionic/core/loader';
 import { initializeApp } from 'firebase/app';
 import { getMessaging } from 'firebase/messaging';
@@ -16,6 +16,12 @@ import { View } from './views/view';
 setupConfig({
   hardwareBackButton: true,
   experimentalCloseWatcher: true
+});
+
+document.addEventListener('ionBackButton' as any, (event: BackButtonEvent) => {
+  event.detail.register(0, () => {
+    window.history.back();
+  });
 });
 
 defineCustomElements(window);
