@@ -1,4 +1,4 @@
-"use strict";(self.webpackChunkmate_app=self.webpackChunkmate_app||[]).push([[6780],{6780:(a,l,e)=>{e.r(l),e.d(l,{swapHorizontalSvg:()=>p});const p=e(2618).JW`<svg fill="none" viewBox="0 0 20 20">
+"use strict";(self.webpackChunkmate_app=self.webpackChunkmate_app||[]).push([[6780],{16780:(a,l,e)=>{e.r(l),e.d(l,{swapHorizontalSvg:()=>p});const p=e(12618).JW`<svg fill="none" viewBox="0 0 20 20">
   <path
     fill="currentColor"
     fill-rule="evenodd"

@@ -1,4 +1,4 @@
-"use strict";(self.webpackChunkmate_app=self.webpackChunkmate_app||[]).push([[3067],{3067:(e,t,i)=>{i.r(t),i.d(t,{AppKitModal:()=>ge,W3mModal:()=>ve,W3mModalBase:()=>he});var o=i(2618),a=i(2745),r=i(31),s=i(4376),n=i(2733),c=i(4833),l=i(6056),w=i(6010),d=i(8249),p=i(8508),u=i(1122);const m={isUnsupportedChainView:()=>"UnsupportedChain"===p.I.state.view||"SwitchNetwork"===p.I.state.view&&p.I.state.history.includes("UnsupportedChain"),async safeClose(){this.isUnsupportedChainView()||await u.U.isSIWXCloseDisabled()?c.W.shake():c.W.close()}};var h=i(6615),v=i(1871),g=i(6742),y=i(2855),f=i(6109),b=i(3494);const k=o.AH`
+"use strict";(self.webpackChunkmate_app=self.webpackChunkmate_app||[]).push([[3067],{3067:(e,t,i)=>{i.r(t),i.d(t,{AppKitModal:()=>ge,W3mModal:()=>ve,W3mModalBase:()=>he});var o=i(12618),a=i(62745),r=i(60031),s=i(24376),n=i(42733),c=i(84833),l=i(6056),w=i(36010),d=i(88249),p=i(78508),u=i(1122);const m={isUnsupportedChainView:()=>"UnsupportedChain"===p.I.state.view||"SwitchNetwork"===p.I.state.view&&p.I.state.history.includes("UnsupportedChain"),async safeClose(){this.isUnsupportedChainView()||await u.U.isSIWXCloseDisabled()?c.W.shake():c.W.close()}};var h=i(68996),v=i(21871),g=i(26742),y=i(52855),f=i(26109),b=i(43494);const k=o.AH`
   :host {
     display: block;
     border-radius: clamp(0px, var(--wui-border-radius-l), 44px);
@@ -12,7 +12,7 @@
       0 0 0 1px var(--wui-color-gray-glass-005),
       0px 4px 12px 4px var(--w3m-card-embedded-shadow-color);
   }
-`;let x=class extends o.WF{render(){return o.qy`<slot></slot>`}};x.styles=[f.W5,k],x=function(e,t,i,o){var a,r=arguments.length,s=r<3?t:null===o?o=Object.getOwnPropertyDescriptor(t,i):o;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)s=Reflect.decorate(e,t,i,o);else for(var n=e.length-1;n>=0;n--)(a=e[n])&&(s=(r<3?a(s):r>3?a(t,i,s):a(t,i))||s);return r>3&&s&&Object.defineProperty(t,i,s),s}([(0,b.E)("wui-card")],x),i(310);var C=i(1655);i(2132),i(8409),i(9807);const S=o.AH`
+`;let x=class extends o.WF{render(){return o.qy`<slot></slot>`}};x.styles=[f.W5,k],x=function(e,t,i,o){var a,r=arguments.length,s=r<3?t:null===o?o=Object.getOwnPropertyDescriptor(t,i):o;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)s=Reflect.decorate(e,t,i,o);else for(var n=e.length-1;n>=0;n--)(a=e[n])&&(s=(r<3?a(s):r>3?a(t,i,s):a(t,i))||s);return r>3&&s&&Object.defineProperty(t,i,s),s}([(0,b.E)("wui-card")],x),i(60310);var C=i(71655);i(2132),i(18409),i(69807);const S=o.AH`
   :host {
     display: flex;
     align-items: center;
@@ -84,7 +84,7 @@
         iconColor=${i?.iconColor}
         icon=${i?.icon}
       ></wui-alertbar>
-    `}onOpen(e){this.open?(this.animate([{opacity:0,transform:"scale(0.85)"},{opacity:1,transform:"scale(1)"}],{duration:150,fill:"forwards",easing:"ease"}),this.style.cssText="pointer-events: auto"):e||(this.animate([{opacity:1,transform:"scale(1)"},{opacity:0,transform:"scale(0.85)"}],{duration:150,fill:"forwards",easing:"ease"}),this.style.cssText="pointer-events: none")}};A.styles=I,N([(0,a.wk)()],A.prototype,"open",void 0),A=N([(0,y.EM)("w3m-alertbar")],A);var E=i(3450),O=i(7601),T=i(3337),$=i(184);const P=o.AH`
+    `}onOpen(e){this.open?(this.animate([{opacity:0,transform:"scale(0.85)"},{opacity:1,transform:"scale(1)"}],{duration:150,fill:"forwards",easing:"ease"}),this.style.cssText="pointer-events: auto"):e||(this.animate([{opacity:1,transform:"scale(1)"},{opacity:0,transform:"scale(0.85)"}],{duration:150,fill:"forwards",easing:"ease"}),this.style.cssText="pointer-events: none")}};A.styles=I,N([(0,a.wk)()],A.prototype,"open",void 0),A=N([(0,y.EM)("w3m-alertbar")],A);var E=i(63450),O=i(27601),T=i(73337),$=i(90184);const P=o.AH`
   button {
     border-radius: var(--local-border-radius);
     color: var(--wui-color-fg-100);
@@ -112,7 +112,7 @@
       <button ?disabled=${this.disabled}>
         <wui-icon color=${this.iconColor} size=${this.size} name=${this.icon}></wui-icon>
       </button>
-    `}};j.styles=[f.W5,f.fD,f.ck,P],D([(0,a.MZ)()],j.prototype,"size",void 0),D([(0,a.MZ)({type:Boolean})],j.prototype,"disabled",void 0),D([(0,a.MZ)()],j.prototype,"icon",void 0),D([(0,a.MZ)()],j.prototype,"iconColor",void 0),j=D([(0,b.E)("wui-icon-link")],j),i(6887),i(2851);const H=o.AH`
+    `}};j.styles=[f.W5,f.fD,f.ck,P],D([(0,a.MZ)()],j.prototype,"size",void 0),D([(0,a.MZ)({type:Boolean})],j.prototype,"disabled",void 0),D([(0,a.MZ)()],j.prototype,"icon",void 0),D([(0,a.MZ)()],j.prototype,"iconColor",void 0),j=D([(0,b.E)("wui-icon-link")],j),i(36887),i(12851);const H=o.AH`
   button {
     display: block;
     display: flex;
@@ -150,7 +150,7 @@
       backgroundColor="fg-100"
       background="opaque"
       icon="networkPlaceholder"
-    ></wui-icon-box>`}};B.styles=[f.W5,f.fD,f.ck,H],M([(0,a.MZ)()],B.prototype,"imageSrc",void 0),B=M([(0,b.E)("wui-select")],B),i(5752),i(5090);var L=i(1482);const z=o.AH`
+    ></wui-icon-box>`}};B.styles=[f.W5,f.fD,f.ck,H],M([(0,a.MZ)()],B.prototype,"imageSrc",void 0),B=M([(0,b.E)("wui-select")],B),i(5752),i(45090);var L=i(41482);const z=o.AH`
   :host {
     height: 64px;
   }
@@ -271,7 +271,7 @@
       id="dynamic"
       icon="helpCircle"
       @click=${this.onWalletHelp.bind(this)}
-    ></wui-icon-link>`}onNetworks(){this.isAllowedNetworkSwitch()&&($.E.sendEvent({type:"track",event:"CLICK_NETWORKS"}),p.I.push("Networks"))}isAllowedNetworkSwitch(){const e=l.W.getAllRequestedCaipNetworks(),t=!!e&&e.length>1,i=e?.find(({id:e})=>e===this.network?.id);return t||!i}getPadding(){return this.heading?["l","2l","l","2l"]:["0","2l","0","2l"]}onViewChange(){const{history:e}=p.I.state;let t=L.o.VIEW_DIRECTION.Next;e.length<this.prevHistoryLength&&(t=L.o.VIEW_DIRECTION.Prev),this.prevHistoryLength=e.length,this.viewDirection=t}async onHistoryChange(){const{history:e}=p.I.state,t=this.shadowRoot?.querySelector("#dynamic");e.length>1&&!this.showBack&&t?(await t.animate([{opacity:1},{opacity:0}],{duration:200,fill:"forwards",easing:"ease"}).finished,this.showBack=!0,t.animate([{opacity:0},{opacity:1}],{duration:200,fill:"forwards",easing:"ease"})):e.length<=1&&this.showBack&&t&&(await t.animate([{opacity:1},{opacity:0}],{duration:200,fill:"forwards",easing:"ease"}).finished,this.showBack=!1,t.animate([{opacity:0},{opacity:1}],{duration:200,fill:"forwards",easing:"ease"}))}onGoBack(){p.I.goBack()}};F.styles=z,U([(0,a.wk)()],F.prototype,"heading",void 0),U([(0,a.wk)()],F.prototype,"network",void 0),U([(0,a.wk)()],F.prototype,"networkImage",void 0),U([(0,a.wk)()],F.prototype,"showBack",void 0),U([(0,a.wk)()],F.prototype,"prevHistoryLength",void 0),U([(0,a.wk)()],F.prototype,"view",void 0),U([(0,a.wk)()],F.prototype,"viewDirection",void 0),U([(0,a.wk)()],F.prototype,"headerText",void 0),F=U([(0,y.EM)("w3m-header")],F),i(880);const Z=o.AH`
+    ></wui-icon-link>`}onNetworks(){this.isAllowedNetworkSwitch()&&($.E.sendEvent({type:"track",event:"CLICK_NETWORKS"}),p.I.push("Networks"))}isAllowedNetworkSwitch(){const e=l.W.getAllRequestedCaipNetworks(),t=!!e&&e.length>1,i=e?.find(({id:e})=>e===this.network?.id);return t||!i}getPadding(){return this.heading?["l","2l","l","2l"]:["0","2l","0","2l"]}onViewChange(){const{history:e}=p.I.state;let t=L.o.VIEW_DIRECTION.Next;e.length<this.prevHistoryLength&&(t=L.o.VIEW_DIRECTION.Prev),this.prevHistoryLength=e.length,this.viewDirection=t}async onHistoryChange(){const{history:e}=p.I.state,t=this.shadowRoot?.querySelector("#dynamic");e.length>1&&!this.showBack&&t?(await t.animate([{opacity:1},{opacity:0}],{duration:200,fill:"forwards",easing:"ease"}).finished,this.showBack=!0,t.animate([{opacity:0},{opacity:1}],{duration:200,fill:"forwards",easing:"ease"})):e.length<=1&&this.showBack&&t&&(await t.animate([{opacity:1},{opacity:0}],{duration:200,fill:"forwards",easing:"ease"}).finished,this.showBack=!1,t.animate([{opacity:0},{opacity:1}],{duration:200,fill:"forwards",easing:"ease"}))}onGoBack(){p.I.goBack()}};F.styles=z,U([(0,a.wk)()],F.prototype,"heading",void 0),U([(0,a.wk)()],F.prototype,"network",void 0),U([(0,a.wk)()],F.prototype,"networkImage",void 0),U([(0,a.wk)()],F.prototype,"showBack",void 0),U([(0,a.wk)()],F.prototype,"prevHistoryLength",void 0),U([(0,a.wk)()],F.prototype,"view",void 0),U([(0,a.wk)()],F.prototype,"viewDirection",void 0),U([(0,a.wk)()],F.prototype,"headerText",void 0),F=U([(0,y.EM)("w3m-header")],F),i(20880);const Z=o.AH`
   :host {
     display: flex;
     column-gap: var(--wui-spacing-s);
@@ -321,7 +321,7 @@
         icon=${r}
         .loading=${"loading"===t}
       ></wui-snackbar>
-    `}onOpen(){clearTimeout(this.timeout),this.open?(this.animate([{opacity:0,transform:"translateX(-50%) scale(0.85)"},{opacity:1,transform:"translateX(-50%) scale(1)"}],{duration:150,fill:"forwards",easing:"ease"}),this.timeout&&clearTimeout(this.timeout),v.P.state.autoClose&&(this.timeout=setTimeout(()=>v.P.hide(),2500))):this.animate([{opacity:1,transform:"translateX(-50%) scale(1)"},{opacity:0,transform:"translateX(-50%) scale(0.85)"}],{duration:150,fill:"forwards",easing:"ease"})}};Q.styles=_,G([(0,a.wk)()],Q.prototype,"open",void 0),Q=G([(0,y.EM)("w3m-snackbar")],Q);var ee=i(9073),te=i(4707),ie=i(5940);const oe=(0,ee.BX)({message:"",open:!1,triggerRect:{width:0,height:0,top:0,left:0},variant:"shade"}),ae={state:oe,subscribe:e=>(0,ee.B1)(oe,()=>e(oe)),subscribeKey:(e,t)=>(0,te.u$)(oe,e,t),showTooltip({message:e,triggerRect:t,variant:i}){oe.open=!0,oe.message=e,oe.triggerRect=t,oe.variant=i},hide(){oe.open=!1,oe.message="",oe.triggerRect={width:0,height:0,top:0,left:0}}},re=(0,ie.X)(ae);i(1636);const se=o.AH`
+    `}onOpen(){clearTimeout(this.timeout),this.open?(this.animate([{opacity:0,transform:"translateX(-50%) scale(0.85)"},{opacity:1,transform:"translateX(-50%) scale(1)"}],{duration:150,fill:"forwards",easing:"ease"}),this.timeout&&clearTimeout(this.timeout),v.P.state.autoClose&&(this.timeout=setTimeout(()=>v.P.hide(),2500))):this.animate([{opacity:1,transform:"translateX(-50%) scale(1)"},{opacity:0,transform:"translateX(-50%) scale(0.85)"}],{duration:150,fill:"forwards",easing:"ease"})}};Q.styles=_,G([(0,a.wk)()],Q.prototype,"open",void 0),Q=G([(0,y.EM)("w3m-snackbar")],Q);var ee=i(29073),te=i(4707),ie=i(35940);const oe=(0,ee.BX)({message:"",open:!1,triggerRect:{width:0,height:0,top:0,left:0},variant:"shade"}),ae={state:oe,subscribe:e=>(0,ee.B1)(oe,()=>e(oe)),subscribeKey:(e,t)=>(0,te.u$)(oe,e,t),showTooltip({message:e,triggerRect:t,variant:i}){oe.open=!0,oe.message=e,oe.triggerRect=t,oe.variant=i},hide(){oe.open=!1,oe.message="",oe.triggerRect={width:0,height:0,top:0,left:0}}},re=(0,ie.X)(ae);i(51636);const se=o.AH`
   :host {
     pointer-events: none;
   }
