@@ -21,7 +21,7 @@ setupConfig({
 const backHandler = (event: BackButtonEvent) => {
   event.detail.register(0, () => {
     const hasHistory = window.history.length > 1;
-    const isFromExternal = document.referrer && !document.referrer.startsWith(window.location.origin);
+    const isFromExternal = document.referrer && !document.referrer.startsWith('https://matedevdao.github.io/mate-app');
     if (!hasHistory || isFromExternal) {
       document.removeEventListener('ionBackButton' as any, backHandler);
     }

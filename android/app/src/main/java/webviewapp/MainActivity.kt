@@ -37,8 +37,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import webviewapp.ui.theme.WebViewAppTheme
 import androidx.core.net.toUri
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.messaging.FirebaseMessaging
+//import com.google.android.gms.tasks.OnCompleteListener
+//import com.google.firebase.messaging.FirebaseMessaging
 
 const val MAIN_URI: String = "https://matedevdao.github.io/mate-app/?platform=android&source=webview"
 
@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
 
         askNotificationPermission()
 
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+        /*FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 Log.w("FCM", "Fetching FCM registration token failed", task.exception)
                 return@OnCompleteListener
@@ -80,7 +80,7 @@ class MainActivity : ComponentActivity() {
             val msg = "FCM registration token: %s".format(token)
             Log.d("FCM", msg)
             Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-        })
+        })*/
 
         setContent {
             WebViewAppTheme {
