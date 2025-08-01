@@ -18,13 +18,17 @@ setupConfig({
   experimentalCloseWatcher: true
 });
 
-document.addEventListener('ionBackButton' as any, (event: BackButtonEvent) => {
-  console.log("1", window.history.length, document.referrer);
+const backHandler = (event: BackButtonEvent) => {
   event.detail.register(0, () => {
-    console.log("2", window.history.length, document.referrer);
+    const hasHistory = window.history.length > 1;
+    const isFromExternal = document.referrer && !document.referrer.startsWith(window.location.origin);
+    if (!hasHistory || isFromExternal) {
+      document.removeEventListener('ionBackButton' as any, backHandler);
+    }
     window.history.back();
   });
-});
+};
+document.addEventListener('ionBackButton' as any, backHandler);
 
 defineCustomElements(window);
 document.documentElement.setAttribute('mode', 'ios');
