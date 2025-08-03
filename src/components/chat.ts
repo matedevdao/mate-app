@@ -6,7 +6,7 @@ import { ChatMessage, ChatService } from '../services/chat';
 import { profileService } from '../services/profile';
 import { Attachment } from '../types/chat';
 import { shortenAddress } from '../utils/address';
-import './chat.less';
+import './chat.css';
 import { Component } from './component';
 import { createJazzicon } from './jazzicon';
 

@@ -1,5 +1,5 @@
-@import (inline) "~@rainbow-me/rainbowkit/styles.css";
-@import (inline) "~@ionic/core/css/ionic.bundle.css";
+@import "@rainbow-me/rainbowkit/styles.css";
+@import "@ionic/core/css/ionic.bundle.css";
 
 html,
 body {

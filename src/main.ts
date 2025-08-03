@@ -6,7 +6,7 @@ import Navigo from 'navigo';
 import { TokenManager } from './auth/token-mananger';
 import { validateToken } from './auth/validate';
 import { createRainbowKit } from './components/wallet';
-import './main.less';
+import './main.css';
 import { createChatRoomView } from './views/authenticated/chatroom';
 import { createHomeView } from './views/authenticated/home';
 import { createLayoutView } from './views/authenticated/layout';

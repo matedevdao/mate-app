@@ -8,7 +8,7 @@ import { TokenManager } from '../../auth/token-mananger';
 import { showErrorAlert } from '../../components/alert';
 import { openWalletConnectModal, wagmiConfig } from '../../components/wallet';
 import { View } from '../view';
-import './login.less';
+import './login.css';
 import logoImage from './logo.png';
 
 async function ensureWalletConnected(): Promise<`0x${string}`> {

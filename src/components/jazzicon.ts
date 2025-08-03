@@ -1,7 +1,7 @@
 import { el } from '@webtaku/el';
 import Color from 'color';
 import MersenneTwister from 'mersenne-twister';
-import './jazzicon.less';
+import './jazzicon.css';
 
 const DEFAULT_SHAPE_COUNT = 3;
 const DEFAULT_WOBBLE = 30;
