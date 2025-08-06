@@ -155,7 +155,10 @@ router.on('/login', () => {
 router.on('/:roomId', (match) => {
   const roomId = match?.data?.roomId;
   if (roomId) {
-    renderContent(createChatRoomView(router, roomId));
+    const view = createChatRoomView(router, roomId);
+    renderContent(view);
+    view.scrollToBottom();
+    setTimeout(() => view.scrollToBottom(), 100);
   } else {
     router.navigate('/');
   }

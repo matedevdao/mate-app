@@ -15,7 +15,9 @@ function getMyAccount(): string {
   }
 }
 
-function createChatRoomView(router: Navigo, roomId: string): View {
+function createChatRoomView(router: Navigo, roomId: string): View & {
+  scrollToBottom: () => void;
+} {
   const page = el('div', { className: 'page flex flex-col h-screen p-4 gap-2' }, {
     style: { height: '100%' }
   });
@@ -30,6 +32,7 @@ function createChatRoomView(router: Navigo, roomId: string): View {
 
   return {
     el: page,
+    scrollToBottom: chat.scrollToBottom,
     remove() {
       chat.remove();
       page.remove();
