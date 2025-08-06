@@ -1,0 +1,1 @@
+{"version":3,"file":"vars.js","sourceRoot":"","sources":["../src/vars.ts"],"names":[],"mappings":"AAAA,MAAM,wBAAwB,GAAG,8BAA8B,CAAC;AAEhE,OAAO,EAAE,wBAAwB,EAAE,CAAC","sourcesContent":["const MESSAGE_FOR_WALLET_LOGIN = 'Mate에 로그인하려면 이 메시지에 서명해 주세요.';\n\nexport { MESSAGE_FOR_WALLET_LOGIN };\n"]}

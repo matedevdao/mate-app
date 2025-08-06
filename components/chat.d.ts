@@ -1,4 +1,4 @@
-import './chat.less';
+import './chat.css';
 import { Component } from './component';
 interface Options {
     roomId: string;
