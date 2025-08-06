@@ -1,11 +1,11 @@
 import { el } from '@webtaku/el';
 import Navigo from 'navigo';
-import { TokenManager } from '../../auth/token-mananger';
-import { createChatComponent } from '../../components/chat';
 import { View } from '../view';
+import { tokenManager } from '@gaiaprotocol/client-common';
+import { createChatComponent } from '@gaiaprotocol/chat-client';
 
 function getMyAccount(): string {
-  const token = TokenManager.getToken();
+  const token = tokenManager.getToken();
   if (!token) return 'unknown';
   try {
     const payload = JSON.parse(atob(token.split('.')[1] || ''));

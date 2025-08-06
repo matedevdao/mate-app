@@ -17,5 +17,9 @@ export declare function setProfile(payload: SetProfilePayload, token: string): P
  * 프로필을 가져옵니다.
  */
 export declare function fetchProfile(address: `0x${string}`): Promise<Profile>;
+/**
+ * 여러 프로필을 가져옵니다.
+ */
+export declare function fetchProfiles(addresses: (`0x${string}`)[]): Promise<Record<`0x${string}`, Profile | null>>;
 export {};
 //# sourceMappingURL=profile.d.ts.map

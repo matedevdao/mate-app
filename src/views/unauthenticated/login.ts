@@ -1,11 +1,10 @@
-import { openWalletConnectModal, wagmiConfig } from '@gaiaprotocol/client-common';
+import { openWalletConnectModal, tokenManager, wagmiConfig } from '@gaiaprotocol/client-common';
 import { SlButton } from '@shoelace-style/shoelace';
 import { disconnect, getAccount, watchAccount } from '@wagmi/core';
 import { el } from '@webtaku/el';
 import Navigo from 'navigo';
 import { requestLogin } from '../../auth/login';
 import { signMessage } from '../../auth/siwe';
-import { TokenManager } from '../../auth/token-mananger';
 import { showErrorAlert } from '../../components/alert';
 import { View } from '../view';
 import './login.css';
@@ -25,7 +24,7 @@ async function handleLoginClick(router: Navigo) {
     const signature = await signMessage(address);
     const token = await requestLogin(address, signature);
 
-    TokenManager.set(token, address);
+    tokenManager.set(token, address);
     router.navigate('/');
   } catch (err) {
     console.error(err);

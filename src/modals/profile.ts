@@ -1,17 +1,15 @@
+import { createJazzicon, logout, tokenManager } from "@gaiaprotocol/client-common";
 import { el } from "@webtaku/el";
 import Navigo from "navigo";
 import { getAddress, zeroAddress } from "viem";
-import { logout } from "../auth/logout";
-import { TokenManager } from "../auth/token-mananger";
-import { createJazzicon } from "../components/jazzicon";
 import { profileService } from "../services/profile";
 import { shortenAddress } from "../utils/address";
 import { createProfileFormModal } from "./profile-form";
 
 function createProfileModal(router: Navigo): HTMLElement {
-  const _addr = TokenManager.getAddress();
+  const _addr = tokenManager.getAddress();
   const myAddress = _addr ? getAddress(_addr) : zeroAddress;
-  const token = TokenManager.getToken() || '';
+  const token = tokenManager.getToken() || '';
 
   const avatar = createJazzicon(myAddress);
   avatar.style.width = '64px';

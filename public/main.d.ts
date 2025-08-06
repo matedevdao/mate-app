@@ -1,2 +1,2 @@
-import './main.less';
+import './main.css';
 //# sourceMappingURL=main.d.ts.map

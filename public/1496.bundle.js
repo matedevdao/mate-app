@@ -1,18 +1,2 @@
-"use strict";(self.webpackChunkmate_app=self.webpackChunkmate_app||[]).push([[1496],{11496:(l,c,i)=>{i.r(c),i.d(c,{githubSvg:()=>a});const a=i(12618).JW`<svg fill="none" viewBox="0 0 40 40">
-  <g clip-path="url(#a)">
-    <g clip-path="url(#b)">
-      <circle cx="20" cy="19.89" r="20" fill="#1B1F23" />
-      <g clip-path="url(#c)">
-        <path
-          fill="#fff"
-          d="M8 19.89a12 12 0 1 1 15.8 11.38c-.6.12-.8-.26-.8-.57v-3.3c0-1.12-.4-1.85-.82-2.22 2.67-.3 5.48-1.31 5.48-5.92 0-1.31-.47-2.38-1.24-3.22.13-.3.54-1.52-.12-3.18 0 0-1-.32-3.3 1.23a11.54 11.54 0 0 0-6 0c-2.3-1.55-3.3-1.23-3.3-1.23a4.32 4.32 0 0 0-.12 3.18 4.64 4.64 0 0 0-1.24 3.22c0 4.6 2.8 5.63 5.47 5.93-.34.3-.65.83-.76 1.6-.69.31-2.42.84-3.5-1 0 0-.63-1.15-1.83-1.23 0 0-1.18-.02-.09.73 0 0 .8.37 1.34 1.76 0 0 .7 2.14 4.03 1.41v2.24c0 .31-.2.68-.8.57A12 12 0 0 1 8 19.9Z"
-        />
-      </g>
-    </g>
-  </g>
-  <defs>
-    <clipPath id="a"><rect width="40" height="40" fill="#fff" rx="20" /></clipPath>
-    <clipPath id="b"><path fill="#fff" d="M0 0h40v40H0z" /></clipPath>
-    <clipPath id="c"><path fill="#fff" d="M8 7.89h24v24H8z" /></clipPath>
-  </defs>
-</svg>`}}]);
+/*! For license information please see 1496.bundle.js.LICENSE.txt */
+"use strict";(self.webpackChunkmate_app=self.webpackChunkmate_app||[]).push([[1496],{61496:(e,t,s)=>{s.r(t),s.d(t,{ion_segment_view:()=>l});var o=s(78625);const l=class{constructor(e){(0,o.r)(this,e),this.ionSegmentViewScroll=(0,o.d)(this,"ionSegmentViewScroll",7),this.scrollEndTimeout=null,this.isTouching=!1,this.disabled=!1}handleScroll(e){var t;const{scrollLeft:s,scrollWidth:o,clientWidth:l}=e.target,n=s/(o-l);this.ionSegmentViewScroll.emit({scrollRatio:n,isManualScroll:null===(t=this.isManualScroll)||void 0===t||t}),this.resetScrollEndTimeout()}handleScrollStart(){this.scrollEndTimeout&&(clearTimeout(this.scrollEndTimeout),this.scrollEndTimeout=null),this.isTouching=!0}handleTouchEnd(){this.isTouching=!1}resetScrollEndTimeout(){this.scrollEndTimeout&&(clearTimeout(this.scrollEndTimeout),this.scrollEndTimeout=null),this.scrollEndTimeout=setTimeout(()=>{this.checkForScrollEnd()},100)}checkForScrollEnd(){this.isTouching||(this.isManualScroll=void 0)}async setContent(e,t=!0){const s=this.getSegmentContents().findIndex(t=>t.id===e);if(-1===s)return;this.isManualScroll=!1,this.resetScrollEndTimeout();const o=this.el.offsetWidth;this.el.scrollTo({top:0,left:s*o,behavior:t?"smooth":"instant"})}getSegmentContents(){return Array.from(this.el.querySelectorAll("ion-segment-content"))}render(){const{disabled:e,isManualScroll:t}=this;return(0,o.h)(o.j,{key:"754a374e89fd4dd682eb00497e717242a6f83357",class:{"segment-view-disabled":e,"segment-view-scroll-disabled":!1===t}},(0,o.h)("slot",{key:"77366044eb61f0d4bba305bd6f0ef8fd1e25194b"}))}get el(){return(0,o.k)(this)}};l.style={ios:":host{display:-ms-flexbox;display:flex;height:100%;overflow-x:scroll;-webkit-scroll-snap-type:x mandatory;-ms-scroll-snap-type:x mandatory;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none}:host::-webkit-scrollbar{display:none}:host(.segment-view-disabled){-ms-touch-action:none;touch-action:none;overflow-x:hidden}:host(.segment-view-scroll-disabled){pointer-events:none}:host(.segment-view-disabled){opacity:0.3}",md:":host{display:-ms-flexbox;display:flex;height:100%;overflow-x:scroll;-webkit-scroll-snap-type:x mandatory;-ms-scroll-snap-type:x mandatory;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none}:host::-webkit-scrollbar{display:none}:host(.segment-view-disabled){-ms-touch-action:none;touch-action:none;overflow-x:hidden}:host(.segment-view-scroll-disabled){pointer-events:none}:host(.segment-view-disabled){opacity:0.3}"}}}]);

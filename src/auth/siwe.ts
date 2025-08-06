@@ -1,7 +1,7 @@
+import { wagmiConfig } from '@gaiaprotocol/client-common';
 import { signMessage as wagmiSignMessage } from '@wagmi/core';
 import { createSiweMessage as viemCreateSiweMessage } from 'viem/siwe';
 import { MESSAGE_FOR_WALLET_LOGIN } from '../vars';
-import { wagmiConfig } from '../components/wallet';
 
 declare const API_URI: string;
 

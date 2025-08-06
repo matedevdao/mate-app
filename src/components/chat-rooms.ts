@@ -1,4 +1,8 @@
+import { tokenManager } from '@gaiaprotocol/client-common';
 import { el } from '@webtaku/el';
+import Navigo from 'navigo';
+import { zeroAddress } from 'viem';
+import { fetchNftOwnershipStats } from '../api/nft-ownership-stats';
 import babypingAvatar from './chat-rooms-avatars/babyping.png';
 import bmcsAvatar from './chat-rooms-avatars/bmcs.png';
 import emateAvatar from './chat-rooms-avatars/emate.png';
@@ -6,10 +10,6 @@ import kcdKongzAvatar from './chat-rooms-avatars/kcd-kongz.png';
 import mateAvatar from './chat-rooms-avatars/mate.png';
 import sparrowAvatar from './chat-rooms-avatars/sparrow.png';
 import { Component } from './component';
-import { TokenManager } from '../auth/token-mananger';
-import { zeroAddress } from 'viem';
-import { fetchNftOwnershipStats } from '../api/nft-ownership-stats';
-import Navigo from 'navigo';
 
 function createChatRooms(router: Navigo): Component {
   const list = el('ion-content', { className: 'chat-rooms' });
@@ -155,7 +155,7 @@ function createChatRooms(router: Navigo): Component {
     list.appendChild(card);
   }
 
-  const address = TokenManager.getAddress() ?? zeroAddress;
+  const address = tokenManager.getAddress() ?? zeroAddress;
 
   fetchNftOwnershipStats(address).then(result => {
     nfts.forEach((nft, idx) => {

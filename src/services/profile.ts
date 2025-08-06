@@ -1,6 +1,6 @@
+import { tokenManager } from '@gaiaprotocol/client-common';
 import { getAddress } from 'viem';
-import { fetchProfile, setProfile } from '../api/profile';
-import { TokenManager } from '../auth/token-mananger';
+import { fetchProfile } from '../api/profile';
 
 /** 캐시에 저장되는 구조 */
 type ProfileEntry = {
@@ -104,7 +104,7 @@ class ProfileService extends EventTarget {
       this.dispatchEvent(
         new CustomEvent('profilechange', { detail: { account: addr, profile: next } })
       );
-      if (addr === TokenManager.getAddress()) {
+      if (addr === tokenManager.getAddress()) {
         this.dispatchEvent(new Event('myprofilechange'));
       }
     }

@@ -48,6 +48,8 @@ module.exports = {
     new MiniCssExtractPlugin({ filename: 'styles.css' }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+      APP_NAME: JSON.stringify('Mate'),
+      WALLET_CONNECT_PROJECT_ID: JSON.stringify('faa5a33f9f8688fcb9bc3c412e6a8ddb'),
       API_URI: JSON.stringify(
         process.env.NODE_ENV === 'production'
           ? 'https://api-v2.matedevdao.workers.dev'
