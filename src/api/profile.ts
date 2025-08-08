@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-declare const API_URI: string;
+declare const API_BASE_URI: string;
 
 export type Profile = {
   nickname?: string;
@@ -28,7 +28,7 @@ export async function setProfile(
   payload: SetProfilePayload,
   token: string
 ): Promise<SetProfileResponse> {
-  const res = await fetch(`${API_URI}/profile`, {
+  const res = await fetch(`${API_BASE_URI}/profile`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ export async function setProfile(
 export async function fetchProfile(
   address: `0x${string}`
 ): Promise<Profile> {
-  const res = await fetch(`${API_URI}/profile?address=${address}`);
+  const res = await fetch(`${API_BASE_URI}/profile?address=${address}`);
 
   const text = await res.text();
 
@@ -91,7 +91,7 @@ export async function fetchProfile(
 export async function fetchProfiles(
   addresses: (`0x${string}`)[]
 ): Promise<Record<`0x${string}`, Profile | null>> {
-  const res = await fetch(`${API_URI}/profiles`, {
+  const res = await fetch(`${API_BASE_URI}/profiles`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

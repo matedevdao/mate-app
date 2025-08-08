@@ -180,7 +180,7 @@ function createChatComponent({ roomId, myAccount }) {
             const uploaded = await Promise.all(pendingAttachments.map(async (p) => {
                 const fd = new FormData();
                 fd.append('image', p.file);
-                const res = await fetch(`${API_URI}/upload-image`, {
+                const res = await fetch(`${API_BASE_URI}/upload-image`, {
                     method: 'POST',
                     body: fd,
                     headers: { Authorization: `Bearer ${TokenManager.getToken()}` }
