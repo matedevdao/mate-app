@@ -3,80 +3,90 @@ import WebKit
 
 let mainURL = URL(string: "https://matedevdao.github.io/mate-app/?platform=ios&source=webview")!
 
-// WKWebView를 Identifiable로 만들어 .sheet(item:) 수정자에서 사용할 수 있게 합니다.
+// WKWebView를 .sheet(item:)에 쓰기 위한 Identifiable
 extension WKWebView: @retroactive Identifiable {
-    public var id: UUID {
-        return UUID()
-    }
+    public var id: UUID { UUID() }
 }
 
-// 팝업으로 표시될 WebView를 감싸는 SwiftUI 뷰입니다.
+// 팝업 WebView 컨테이너
 struct PopupWebView: View {
     let webView: WKWebView
-    
     var body: some View {
-        // WKWebView를 SwiftUI에서 사용하기 위해 UIViewRepresentable을 사용합니다.
         WebViewRepresentable(webView: webView)
     }
 }
 
-// PopupWebView 내부에서 실제 WKWebView를 표시하는 UIViewRepresentable입니다.
 struct WebViewRepresentable: UIViewRepresentable {
     let webView: WKWebView
-    
-    func makeUIView(context: Context) -> WKWebView {
-        return webView
-    }
-    
+    func makeUIView(context: Context) -> WKWebView { webView }
     func updateUIView(_ uiView: WKWebView, context: Context) {}
 }
 
-// 메인 WebView와 팝업 로직을 처리하는 뷰입니다.
+// 메인 WebView (+ 팝업 전달)
 struct WebView: UIViewRepresentable {
     let url: URL
-    // ContentView의 State와 바인딩하여 팝업 WebView를 전달합니다.
     @Binding var popupWebView: WKWebView?
 
+    // ⬇️ 진행률/로딩 상태를 SwiftUI로 올리기 위한 바인딩
+    @Binding var progress: Double   // 0.0 ~ 1.0
+    @Binding var isLoading: Bool
+
     func makeUIView(context: Context) -> WKWebView {
-        // JavaScript로 윈도우를 열 수 있도록 설정합니다.
         let preferences = WKPreferences()
         preferences.javaScriptCanOpenWindowsAutomatically = true
-        
+
         let configuration = WKWebViewConfiguration()
         configuration.preferences = preferences
 
-        // 설정과 함께 WebView를 생성합니다.
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = context.coordinator
-        // UIDelegate를 설정하여 팝업 이벤트를 받습니다.
         webView.uiDelegate = context.coordinator
         webView.isInspectable = true
-        
-        let request = URLRequest(url: url)
-        webView.load(request)
+
+        // 처음 로드
+        webView.load(URLRequest(url: url))
+
+        // KVO로 estimatedProgress 관찰
+        context.coordinator.progressObs = webView.observe(\.estimatedProgress, options: [.new]) { _, change in
+            DispatchQueue.main.async {
+                self.progress = change.newValue ?? 0
+            }
+        }
+
         return webView
     }
 
-    func updateUIView(_ uiView: WKWebView, context: Context) {
-        // 필요 시 업데이트
-    }
+    func updateUIView(_ uiView: WKWebView, context: Context) {}
 
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
-    }
+    func makeCoordinator() -> Coordinator { Coordinator(self) }
 
     class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate {
         var parent: WebView
+        var progressObs: NSKeyValueObservation?
 
-        init(_ parent: WebView) {
-            self.parent = parent
+        init(_ parent: WebView) { self.parent = parent }
+
+        // 로딩 시작/끝 → isLoading 갱신
+        func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+            DispatchQueue.main.async { self.parent.isLoading = true }
+        }
+        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            DispatchQueue.main.async {
+                self.parent.isLoading = false
+                self.parent.progress = 1.0
+            }
+        }
+        func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+            DispatchQueue.main.async { self.parent.isLoading = false }
+        }
+        func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+            DispatchQueue.main.async { self.parent.isLoading = false }
         }
 
-        // 딥링크 처리 로직 (기존 코드 유지)
+        // 딥링크 처리(원본 유지)
         func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
                      decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
             if let url = navigationAction.request.url {
-                print("Request URL: \(url)")
                 if url.scheme != "http" && url.scheme != "https" {
                     if UIApplication.shared.canOpenURL(url) {
                         UIApplication.shared.open(url)
@@ -87,36 +97,66 @@ struct WebView: UIViewRepresentable {
             }
             decisionHandler(.allow)
         }
-        
-        // 팝업(새 창) 요청을 처리하는 메소드
+
+        // 팝업 처리(원본 유지)
         func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration,
                      for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
-            
-            // 새 WebView를 생성하여 팝업으로 표시합니다.
             let popup = WKWebView(frame: .zero, configuration: configuration)
             popup.navigationDelegate = self
             popup.uiDelegate = self
-            
-            // 생성된 팝업 WebView를 부모 View(ContentView)의 State에 할당합니다.
             self.parent.popupWebView = popup
-            
             return popup
         }
+
+        deinit { progressObs?.invalidate() }
     }
 }
 
 struct ContentView: View {
-    // 팝업으로 띄울 WKWebView 객체를 관리하는 State
     @State private var popupWebView: WKWebView?
 
+    // ⬇️ 진행률/로딩 상태
+    @State private var progress: Double = 0.0
+    @State private var isLoading: Bool = false
+
     var body: some View {
-        WebView(url: mainURL, popupWebView: $popupWebView)
+        ZStack {
+            WebView(
+                url: mainURL,
+                popupWebView: $popupWebView,
+                progress: $progress,
+                isLoading: $isLoading
+            )
             .edgesIgnoringSafeArea(.all)
-            // popupWebView State가 nil이 아닐 때 시트(Sheet)를 띄웁니다.
             .sheet(item: $popupWebView) { webView in
-                // 팝업 WebView를 담고 있는 뷰를 시트로 표시합니다.
                 PopupWebView(webView: webView)
             }
+
+            // === 가운데 오버레이 (로딩 중일 때만) ===
+            if isLoading || progress < 1.0 {
+                Color.black.opacity(0.4).ignoresSafeArea()
+                VStack(spacing: 12) {
+                    // 스피너
+                    ProgressView()
+                        .progressViewStyle(.circular)
+
+                    // 퍼센트 텍스트
+                    Text("\(Int((progress.clamped(to: 0...1)) * 100))%")
+                        .font(.title3.weight(.semibold))
+                        .foregroundColor(.white)
+
+                    // 원하면 안내문구도 추가 가능:
+                    // Text("페이지를 불러오는 중…").foregroundColor(.white.opacity(0.9))
+                }
+            }
+        }
+    }
+}
+
+// 작은 유틸
+fileprivate extension Comparable {
+    func clamped(to range: ClosedRange<Self>) -> Self {
+        min(max(self, range.lowerBound), range.upperBound)
     }
 }
 
