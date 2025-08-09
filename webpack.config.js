@@ -53,6 +53,11 @@ module.exports = {
       API_BASE_URI: JSON.stringify(
         process.env.NODE_ENV === 'production'
           ? 'https://api-v2.matedevdao.workers.dev'
+          : 'http://localhost:8081'
+      ),
+      NFT_API_BASE_URI: JSON.stringify(
+        process.env.NODE_ENV === 'production'
+          ? 'https://nft-api.matedevdao.workers.dev'
           : 'http://localhost:8082'
       )
     })

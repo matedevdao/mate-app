@@ -5,6 +5,8 @@ import { defineCustomElements } from '@ionic/core/loader';
 import { initializeApp } from 'firebase/app';
 import { getMessaging } from 'firebase/messaging';
 import Navigo from 'navigo';
+import { getAddress } from 'viem';
+import { fetchMainNftsWithInfo } from './api/main-nfts-with-info';
 import { fetchProfiles } from './api/profile';
 import { validateToken } from './auth/validate';
 import './main.css';
@@ -70,10 +72,40 @@ if (!isWebView) {
   });*/
 }
 
+function getCurrentCollectionFromPath(): string | null {
+  const seg = (location.pathname || '').split('/').filter(Boolean)[0] || '';
+  return seg;
+}
+
 chatProfileService.init(async (addresses) => {
-  const profiles = await fetchProfiles(addresses);
-  return profiles;
-})
+  const normalized = addresses.map(getAddress);
+  const collection = getCurrentCollectionFromPath();
+
+  // 1) 프로필(닉네임/바이오 등) 그대로 유지
+  const profiles = await fetchProfiles(normalized as unknown as (`0x${string}`)[]);
+
+  // 2) 메인 NFT 이미지: 방(컬렉션)이 있을 때만 조회
+  const nftRows = collection
+    ? await fetchMainNftsWithInfo(collection, normalized)
+    : [];
+
+  const imageMap = new Map<string, string | null>();
+  for (const row of nftRows) {
+    const addr = getAddress(row.user_address);
+    imageMap.set(addr, row.nft?.image ?? null);
+  }
+
+  // 3) chatProfileService 형식으로 합치기
+  const result: Record<string, { nickname?: string | null; profileImage?: string | null } | null> = {};
+  for (const addr of normalized) {
+    const p = profiles[addr as `0x${string}`] ?? null;
+    result[addr] = {
+      nickname: p?.nickname ?? null,
+      profileImage: imageMap.get(addr) ?? null,
+    };
+  }
+  return result;
+});
 
 const p = urlParams.get('p');
 
