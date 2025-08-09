@@ -23,6 +23,7 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
@@ -39,6 +40,10 @@ import webviewapp.ui.theme.WebViewAppTheme
 import androidx.core.net.toUri
 //import com.google.android.gms.tasks.OnCompleteListener
 //import com.google.firebase.messaging.FirebaseMessaging
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.dp
 
 const val MAIN_URI: String = "https://matedevdao.github.io/mate-app/?platform=android&source=webview"
 
@@ -146,86 +151,107 @@ fun WebViewScreen(
     onFileChooser: ((ValueCallback<Array<Uri>>, Intent) -> Unit)? = null
 ) {
     var webView: WebView? by remember { mutableStateOf(null) }
+    var progress by remember { mutableStateOf(0) }
 
     BackHandler(enabled = true) {
-        if (webView?.canGoBack() == true) {
-            webView?.goBack()
-        } else {
-            // 히스토리가 없다면 앱 종료 (Activity.finish())
-            (webView?.context as? Activity)?.finish()
-        }
+        if (webView?.canGoBack() == true) webView?.goBack()
+        else (webView?.context as? Activity)?.finish()
     }
 
-    AndroidView(
-        factory = { context ->
-            WebView(context).apply {
-                setBackgroundColor(Color.BLACK)
-                settings.apply {
-                    javaScriptEnabled = true
-                    domStorageEnabled = true
-                    setSupportMultipleWindows(true)
-                }
+    Box(modifier = modifier.fillMaxSize()) {
+        AndroidView(
+            factory = { context ->
+                WebView(context).apply {
+                    setBackgroundColor(Color.BLACK)
+                    settings.apply {
+                        javaScriptEnabled = true
+                        domStorageEnabled = true
+                        setSupportMultipleWindows(true)
+                    }
 
-                webViewClient = object : WebViewClient() {
-                    override fun shouldOverrideUrlLoading(
-                        view: WebView,
-                        request: WebResourceRequest
-                    ): Boolean {
-                        val requestedUrl = request.url.toString()
-                        if (requestedUrl.startsWith("http://") || requestedUrl.startsWith("https://")) {
-                            return false
-                        } else {
-                            try {
-                                val intent = Intent(Intent.ACTION_VIEW, request.url)
-                                view.context.startActivity(intent)
-                            } catch (e: Exception) {
-                                e.printStackTrace()
+                    webViewClient = object : WebViewClient() {
+                        override fun shouldOverrideUrlLoading(
+                            view: WebView,
+                            request: WebResourceRequest
+                        ): Boolean {
+                            val requestedUrl = request.url.toString()
+                            return if (requestedUrl.startsWith("http://") || requestedUrl.startsWith("https://")) {
+                                false
+                            } else {
+                                try {
+                                    val intent = Intent(Intent.ACTION_VIEW, request.url)
+                                    view.context.startActivity(intent)
+                                } catch (_: Exception) {}
+                                true
                             }
+                        }
+                    }
+
+                    webChromeClient = object : WebChromeClient() {
+                        override fun onShowFileChooser(
+                            webView: WebView?,
+                            filePathCallback: ValueCallback<Array<Uri>>,
+                            fileChooserParams: FileChooserParams
+                        ): Boolean {
+                            onFileChooser?.invoke(filePathCallback, fileChooserParams.createIntent())
                             return true
                         }
-                    }
-                }
 
-                webChromeClient = object : WebChromeClient() {
-                    override fun onShowFileChooser(
-                        webView: WebView?,
-                        filePathCallback: ValueCallback<Array<Uri>>,
-                        fileChooserParams: FileChooserParams
-                    ): Boolean {
-                        onFileChooser?.invoke(filePathCallback, fileChooserParams.createIntent())
-                        return true
-                    }
-
-                    override fun onCreateWindow(
-                        view: WebView,
-                        isDialog: Boolean,
-                        isUserGesture: Boolean,
-                        resultMsg: Message
-                    ): Boolean {
-                        val ctx = view.context
-                        val newWebView = WebView(ctx)
-                        newWebView.settings.javaScriptEnabled = true
-                        newWebView.webViewClient = object : WebViewClient() {
-                            override fun onPageStarted(view: WebView?, url: String?, favicon: android.graphics.Bitmap?) {
-                                if (url != null) {
-                                    val intent = Intent(Intent.ACTION_VIEW, url.toUri())
-                                    ctx.startActivity(intent)
+                        override fun onCreateWindow(
+                            view: WebView,
+                            isDialog: Boolean,
+                            isUserGesture: Boolean,
+                            resultMsg: Message
+                        ): Boolean {
+                            val ctx = view.context
+                            val newWebView = WebView(ctx).apply {
+                                settings.javaScriptEnabled = true
+                                webViewClient = object : WebViewClient() {
+                                    override fun onPageStarted(
+                                        view: WebView?, url: String?, favicon: android.graphics.Bitmap?
+                                    ) {
+                                        if (url != null) ctx.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
+                                        destroy()
+                                    }
                                 }
-                                newWebView.destroy()
                             }
+                            (resultMsg.obj as WebView.WebViewTransport).apply {
+                                webView = newWebView
+                            }
+                            resultMsg.sendToTarget()
+                            return true
                         }
-                        val transport = resultMsg.obj as WebView.WebViewTransport
-                        transport.webView = newWebView
-                        resultMsg.sendToTarget()
-                        return true
+
+                        override fun onProgressChanged(view: WebView?, newProgress: Int) {
+                            progress = newProgress.coerceIn(0, 100)
+                        }
                     }
+
+                    loadUrl(url)
+                    webView = this
                 }
+            },
+            modifier = Modifier.fillMaxSize()
+        )
 
-                loadUrl(url)
-
-                webView = this
+        // === 가운데 오버레이 (로딩 중일 때만) ===
+        if (progress in 0..99) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .imePadding() // 키보드 올라올 때도 중앙 유지
+                    .padding(24.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    CircularProgressIndicator()
+                    Spacer(Modifier.height(12.dp))
+                    Text(
+                        text = "$progress%",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
             }
-        },
-        modifier = modifier.fillMaxSize()
-    )
+        }
+    }
 }
