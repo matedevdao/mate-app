@@ -22,7 +22,7 @@ class ChatService extends EventTarget {
     /** 텍스트 메시지 전송 → 서버가 확정한 ChatMessage 반환 */
     async send(text, attachments = [], localId) {
         const token = TokenManager.getToken();
-        const resp = await fetch(`${API_URI}/chat/${this.roomId}/send`, {
+        const resp = await fetch(`${API_BASE_URI}/chat/${this.roomId}/send`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ class ChatService extends EventTarget {
             let reader = null;
             let buffer = '';
             try {
-                const resp = await fetch(`${API_URI}/chat/${this.roomId}/stream`, {
+                const resp = await fetch(`${API_BASE_URI}/chat/${this.roomId}/stream`, {
                     headers: { Authorization: `Bearer ${TokenManager.getToken()}` },
                     signal: this.abortController.signal,
                 });

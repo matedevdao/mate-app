@@ -7,7 +7,7 @@ const ProfileSchema = z.object({
  * 프로필을 설정합니다.
  */
 export async function setProfile(payload, token) {
-    const res = await fetch(`${API_URI}/profile`, {
+    const res = await fetch(`${API_BASE_URI}/profile`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ export async function setProfile(payload, token) {
  * 프로필을 가져옵니다.
  */
 export async function fetchProfile(address) {
-    const res = await fetch(`${API_URI}/profile?address=${address}`);
+    const res = await fetch(`${API_BASE_URI}/profile?address=${address}`);
     const text = await res.text();
     if (!res.ok) {
         throw new Error(`프로필 조회에 실패했습니다. (status: ${res.status})\n${text}`);
@@ -57,7 +57,7 @@ export async function fetchProfile(address) {
  * 여러 프로필을 가져옵니다.
  */
 export async function fetchProfiles(addresses) {
-    const res = await fetch(`${API_URI}/profiles`, {
+    const res = await fetch(`${API_BASE_URI}/profiles`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

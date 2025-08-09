@@ -1,5 +1,5 @@
 async function requestLogin(address, signature) {
-    const response = await fetch(`${API_URI}/login`, {
+    const response = await fetch(`${API_BASE_URI}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

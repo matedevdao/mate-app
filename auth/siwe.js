@@ -25,7 +25,7 @@ function createSiweMessage(address, nonce, issuedAt) {
     });
 }
 async function signMessage(address) {
-    const response = await fetch(`${API_URI}/nonce`, {
+    const response = await fetch(`${API_BASE_URI}/nonce`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
