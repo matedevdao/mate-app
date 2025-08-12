@@ -16,6 +16,8 @@ import { createLayoutView } from './views/authenticated/layout';
 import { createLoginView } from './views/unauthenticated/login';
 import { View } from './views/view';
 
+const BASE_PATH = process.env.NODE_ENV === 'production' ? '/mate-app/' : '/';
+
 setupConfig({
   hardwareBackButton: true,
   experimentalCloseWatcher: true
@@ -73,8 +75,14 @@ if (!isWebView) {
 }
 
 function getCurrentCollectionFromPath(): string | null {
-  const seg = (location.pathname || '').split('/').filter(Boolean)[0] || '';
-  return seg;
+  let path = location.pathname || '';
+
+  if (path.startsWith(BASE_PATH)) {
+    path = path.slice(BASE_PATH.length);
+  }
+
+  const seg = path.split('/').filter(Boolean)[0] || '';
+  return seg || null;
 }
 
 chatProfileService.init(async (addresses) => {
@@ -114,7 +122,7 @@ if (p) {
   history.replaceState({}, '', p);
 }
 
-const router = new Navigo(process.env.NODE_ENV === 'production' ? '/mate-app/' : '/');
+const router = new Navigo(BASE_PATH);
 
 let layoutView: View | undefined;
 let contentContainer: HTMLElement | undefined;
