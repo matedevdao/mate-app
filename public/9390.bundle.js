@@ -1,4 +1,4 @@
-"use strict";(self.webpackChunkmate_app=self.webpackChunkmate_app||[]).push([[9390],{79390:(e,l,t)=>{t.r(l),t.d(l,{checkmarkSvg:()=>p});const p=t(12618).JW`<svg
+"use strict";(self.webpackChunkmate_app=self.webpackChunkmate_app||[]).push([[9390],{79390:(e,l,t)=>{t.r(l),t.d(l,{checkmarkSvg:()=>p});const p=t(86161).JW`<svg
   width="28"
   height="28"
   viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">

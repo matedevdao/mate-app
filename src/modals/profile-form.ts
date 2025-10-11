@@ -72,7 +72,7 @@ export function createProfileFormModal(address: string, token: string) {
   );
 
   const modalContent = el('ion-content.ion-padding',
-    el('ion-list', nicknameInput, bioInput, saveBtn)
+    el('ion-list', nicknameInput as any, bioInput, saveBtn)
   );
 
   modal.append(modalHeader, modalContent);
