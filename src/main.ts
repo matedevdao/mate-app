@@ -36,9 +36,6 @@ const ROUTES = {
   ROOM: '/:roomId',
 } as const;
 
-// Feature flag: set to true if you need additional allowlist gating like Valhalla
-const REQUIRE_GOD_MODE = false;
-
 function safeRemove(view?: View) {
   try { view?.remove(); } catch { /* noop */ }
 }
@@ -274,12 +271,6 @@ async function determineFlow(): Promise<'ok' | 'to-login' | 'to-link'> {
 
   const address = tokenManager.getAddress();
   if (!address) { tokenManager.clear(); return 'to-login'; }
-
-  if (REQUIRE_GOD_MODE) {
-    // import { checkGodMode } from './services/god-mode';
-    // const hasGodMode = await checkGodMode(address);
-    // if (!hasGodMode) { tokenManager.clear(); return 'to-login'; }
-  }
 
   return 'ok';
 }
