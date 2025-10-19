@@ -1,4 +1,4 @@
-"use strict";(self.webpackChunkmate_app=self.webpackChunkmate_app||[]).push([[1975],{51975:(e,C,l)=>{l.r(C),l.d(C,{swapHorizontalMediumSvg:()=>t});const t=l(12618).JW`<svg
+"use strict";(self.webpackChunkmate_app=self.webpackChunkmate_app||[]).push([[1975],{51975:(e,C,l)=>{l.r(C),l.d(C,{swapHorizontalMediumSvg:()=>t});const t=l(86161).JW`<svg
   width="14"
   height="14"
   viewBox="0 0 14 14"

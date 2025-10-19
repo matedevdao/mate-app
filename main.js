@@ -5,6 +5,8 @@ import { defineCustomElements } from '@ionic/core/loader';
 import { initializeApp } from 'firebase/app';
 import { getMessaging } from 'firebase/messaging';
 import Navigo from 'navigo';
+import { getAddress } from 'viem';
+import { fetchMainNftsWithInfo } from './api/main-nfts-with-info';
 import { fetchProfiles } from './api/profile';
 import { validateToken } from './auth/validate';
 import './main.css';
@@ -12,6 +14,7 @@ import { createChatRoomView } from './views/authenticated/chatroom';
 import { createHomeView } from './views/authenticated/home';
 import { createLayoutView } from './views/authenticated/layout';
 import { createLoginView } from './views/unauthenticated/login';
+const BASE_PATH = process.env.NODE_ENV === 'production' ? '/mate-app/' : '/';
 setupConfig({
     hardwareBackButton: true,
     experimentalCloseWatcher: true
@@ -60,16 +63,45 @@ if (!isWebView) {
       }
     });*/
 }
+function getCurrentCollectionFromPath() {
+    let path = location.pathname || '';
+    if (path.startsWith(BASE_PATH)) {
+        path = path.slice(BASE_PATH.length);
+    }
+    const seg = path.split('/').filter(Boolean)[0] || '';
+    return seg || null;
+}
 chatProfileService.init(async (addresses) => {
-    const profiles = await fetchProfiles(addresses);
-    return profiles;
+    const normalized = addresses.map(getAddress);
+    const collection = getCurrentCollectionFromPath();
+    // 1) 프로필(닉네임/바이오 등) 그대로 유지
+    const profiles = await fetchProfiles(normalized);
+    // 2) 메인 NFT 이미지: 방(컬렉션)이 있을 때만 조회
+    const nftRows = collection
+        ? await fetchMainNftsWithInfo(collection, normalized)
+        : [];
+    const imageMap = new Map();
+    for (const row of nftRows) {
+        const addr = getAddress(row.user_address);
+        imageMap.set(addr, row.nft?.image ?? null);
+    }
+    // 3) chatProfileService 형식으로 합치기
+    const result = {};
+    for (const addr of normalized) {
+        const p = profiles[addr] ?? null;
+        result[addr] = {
+            nickname: p?.nickname ?? null,
+            profileImage: imageMap.get(addr) ?? null,
+        };
+    }
+    return result;
 });
 const p = urlParams.get('p');
 if (p) {
     // 쿼리스트링을 클리어하고, 라우터로 이동
     history.replaceState({}, '', p);
 }
-const router = new Navigo(process.env.NODE_ENV === 'production' ? '/mate-app/' : '/');
+const router = new Navigo(BASE_PATH);
 let layoutView;
 let contentContainer;
 let loginView;
@@ -134,7 +166,10 @@ router.on('/login', () => {
 router.on('/:roomId', (match) => {
     const roomId = match?.data?.roomId;
     if (roomId) {
-        renderContent(createChatRoomView(router, roomId));
+        const view = createChatRoomView(router, roomId);
+        renderContent(view);
+        view.scrollToBottom();
+        setTimeout(() => view.scrollToBottom(), 100);
     }
     else {
         router.navigate('/');

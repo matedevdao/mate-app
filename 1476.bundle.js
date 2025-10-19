@@ -1,4 +1,4 @@
-"use strict";(self.webpackChunkmate_app=self.webpackChunkmate_app||[]).push([[1476],{61476:(e,l,t)=>{t.r(l),t.d(l,{addSvg:()=>C});const C=t(12618).JW`<svg
+"use strict";(self.webpackChunkmate_app=self.webpackChunkmate_app||[]).push([[1476],{61476:(e,l,t)=>{t.r(l),t.d(l,{addSvg:()=>C});const C=t(86161).JW`<svg
   width="14"
   height="14"
   viewBox="0 0 14 14"
