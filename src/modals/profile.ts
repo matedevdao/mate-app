@@ -2,6 +2,8 @@ import { createJazzicon, logout, tokenManager } from "@gaiaprotocol/client-commo
 import { el } from "@webtaku/el";
 import Navigo from "navigo";
 import { getAddress, zeroAddress } from "viem";
+import { fetchGoogleMeByWallet, unlinkGoogleWeb3WalletByToken } from "../api/google";
+import { googleLogin, googleLogout } from "../auth/google-login";
 import { profileService } from "../services/profile";
 import { shortenAddress } from "../utils/address";
 import { createProfileFormModal } from "./profile-form";
@@ -60,11 +62,39 @@ function createProfileModal(router: Navigo): HTMLElement {
     updateProfileDisplay();
   });
 
-  const menuItem = (icon: string, title: string, subtitle = '', onClick?: () => void) =>
+  // ✅ 간단 토스트 & 로딩 헬퍼
+  const showToast = async (message: string) => {
+    const t = document.createElement('ion-toast') as any;
+    t.message = message;
+    t.duration = 1600;
+    t.position = 'bottom';
+    document.body.appendChild(t);
+    await t.present?.();
+  };
+
+  const withLoading = async <T,>(fn: () => Promise<T>, msg = '처리 중...'): Promise<T> => {
+    const loading = document.createElement('ion-loading') as any;
+    loading.message = msg;
+    document.body.appendChild(loading);
+    await loading.present?.();
+    try {
+      return await fn();
+    } finally {
+      await loading.dismiss?.();
+      loading.remove();
+    }
+  };
+
+  const menuItem = (icon: string, title: string, subtitle = '', onClick?: () => void, rightEl?: HTMLElement) =>
     el('ion-item', { button: !!onClick, onclick: onClick },
       el('ion-icon', { name: icon, slot: 'start' }),
-      el('ion-label', el('h2', title), subtitle ? el('p', subtitle) : undefined)
+      el('ion-label', el('h2', title), subtitle ? el('p', subtitle) : undefined),
+      rightEl ? rightEl : undefined
     );
+
+  // ✅ 구글 연동 Link/Unlink 항목(표시 토글을 위해 변수로 보관)
+  let linkItemEl: HTMLElement;
+  let unlinkItemEl: HTMLElement;
 
   const modalContent = el('ion-content.ion-padding',
     profileCard,
@@ -73,12 +103,46 @@ function createProfileModal(router: Navigo): HTMLElement {
       menuItem('person-circle', '프로필 편집', '닉네임과 자기소개를 수정합니다.', () => {
         const formModal = createProfileFormModal(myAddress, token);
         document.body.appendChild(formModal);
-        formModal.present();
+        (formModal as any).present?.();
       }),
 
+      // ✅ Google 계정 연동
+      (linkItemEl = menuItem(
+        'logo-google',
+        'Google 계정 연동',
+        'Google 계정을 연결합니다.',
+        async () => {
+          await withLoading(async () => {
+            await googleLogin();
+            await refreshGoogleLinkState(); // 연동 후 상태 즉시 갱신
+          }, 'Google 계정 연동 중...');
+          await showToast('Google 계정이 연동되었습니다.');
+        }
+      )),
+
+      // ✅ Google 계정 연결 해제
+      (unlinkItemEl = menuItem(
+        'logo-google',
+        'Google 계정 연결 해제',
+        '지갑에서 Google 계정 연결을 해제합니다.',
+        async () => {
+          await withLoading(async () => {
+            const t = tokenManager.getToken();
+            if (!t) throw new Error('인증 토큰이 없습니다.');
+            await unlinkGoogleWeb3WalletByToken(t);
+            await googleLogout();
+            await refreshGoogleLinkState(); // 해제 후 상태 즉시 갱신
+          }, '연결 해제 중...');
+          await showToast('Google 계정 연결이 해제되었습니다.');
+        }
+      )),
+
       menuItem('log-out', '로그아웃', '', async () => {
-        await logout();
-        router.navigate('/login');
+        await withLoading(async () => {
+          await logout();
+          await googleLogout().catch(() => { }); // 이미 해제된 경우 무시
+          router.navigate('/login');
+        }, '로그아웃 중...')
       }),
     )
   );
@@ -87,12 +151,48 @@ function createProfileModal(router: Navigo): HTMLElement {
     el('ion-toolbar',
       el('ion-title', '프로필'),
       el('ion-buttons', { slot: 'end' },
-        el('ion-button', { onclick: () => modal.dismiss() }, '닫기')
+        el('ion-button', { onclick: () => (modal as any).dismiss?.() }, '닫기')
       ),
     )
   );
 
   modal.append(modalHeader, modalContent);
+
+  // ✅ 연동 상태 갱신 함수
+  const refreshGoogleLinkState = async () => {
+    const setLinkedUI = (linked: boolean) => {
+      if (linkItemEl) linkItemEl.style.display = linked ? 'none' : '';
+      if (unlinkItemEl) unlinkItemEl.style.display = linked ? '' : 'none';
+    };
+
+    try {
+      const t = tokenManager.getToken();
+      if (!t) {
+        setLinkedUI(false);
+        return;
+      }
+      const me = await fetchGoogleMeByWallet(t);
+      const linked = !!(me?.ok && me?.google_sub);
+      setLinkedUI(linked);
+
+      // 연결된 이메일을 Unlink 항목 부제목으로 표시
+      if (unlinkItemEl) {
+        const labelP = unlinkItemEl.querySelector('ion-label > p') as HTMLElement | null;
+        if (labelP) {
+          labelP.textContent = linked && me?.profile?.email
+            ? `연결된 계정: ${me.profile.email}`
+            : '지갑에서 Google 계정 연결을 해제합니다.';
+        }
+      }
+    } catch {
+      // 조회 실패 시 미연동으로 간주
+      setLinkedUI(false);
+    }
+  };
+
+  // ✅ 최초 진입 시 연동 상태 반영
+  refreshGoogleLinkState();
+
   return modal;
 }
 

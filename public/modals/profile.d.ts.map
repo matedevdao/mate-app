@@ -1,1 +1,1 @@
-{"version":3,"file":"profile.d.ts","sourceRoot":"","sources":["../../src/modals/profile.ts"],"names":[],"mappings":"AAEA,OAAO,MAAM,MAAM,QAAQ,CAAC;AAM5B,iBAAS,kBAAkB,CAAC,MAAM,EAAE,MAAM,GAAG,WAAW,CAwFvD;AAED,OAAO,EAAE,kBAAkB,EAAE,CAAC"}
+{"version":3,"file":"profile.d.ts","sourceRoot":"","sources":["../../src/modals/profile.ts"],"names":[],"mappings":"AAEA,OAAO,MAAM,MAAM,QAAQ,CAAC;AAQ5B,iBAAS,kBAAkB,CAAC,MAAM,EAAE,MAAM,GAAG,WAAW,CA0LvD;AAED,OAAO,EAAE,kBAAkB,EAAE,CAAC"}
