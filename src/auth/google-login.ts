@@ -1,5 +1,6 @@
 import { isWebView, platform } from "../platform";
 import { oauth2LoginWithIdToken, oauth2Logout, oauth2Start } from "./oauth2";
+import { sessionManager } from "./session-manager";
 
 export function googleLogin() {
   if (isWebView && (window as any).Native?.signInWithGoogle) {
@@ -21,16 +22,22 @@ export async function googleLogout() {
     return new Promise<void>(resolve => signOutResolve = resolve)
   } else {
     await oauth2Logout()
+    sessionManager.clear();
   }
 }
+
+const BASE_PATH = process.env.NODE_ENV === 'production' ? '/mate-app/' : '/';
 
 if (isWebView) {
   window.addEventListener('googleSignInComplete', async (e: any) => {
     const { idToken, nonce } = e.detail
     try {
       // 서버에서 구글 공개키로 ID 토큰 검증 + nonce 검증 + aud(=WEB_CLIENT_ID) 검증 필수
-      const { ok } = await oauth2LoginWithIdToken('google', idToken, nonce)
-      if (ok) location.href = `https://matedevdao.github.io/mate-app/?platform=${platform}&source=webview`;
+      const { ok, sessionId } = await oauth2LoginWithIdToken('google', idToken, nonce)
+      if (ok) {
+        sessionManager.set(sessionId)
+        location.href = `${BASE_PATH}?platform=${platform}&source=webview`;
+      }
       else {
         const toast = document.createElement("ion-toast");
         toast.message = `Google sign-in failed. ${e.detail.message}`;
@@ -61,6 +68,7 @@ if (isWebView) {
   })
 
   window.addEventListener('googleSignOutComplete', () => {
+    sessionManager.clear();
     signOutResolve?.()
   });
 

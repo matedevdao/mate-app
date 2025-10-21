@@ -7,7 +7,7 @@ export function oauth2Start(provider: string) {
   location.href = `${API_BASE_URI}/oauth2/start/mateapp2${provider}`;
 }
 
-export async function oauth2LoginWithIdToken(provider: string, idToken: string, nonce: string): Promise<{ ok: boolean }> {
+export async function oauth2LoginWithIdToken(provider: string, idToken: string, nonce: string): Promise<{ ok: boolean; sessionId: string }> {
   const response = await fetch(`${API_BASE_URI}/oauth2/login-with-idtoken/${provider}`, {
     method: 'POST',
     headers: {

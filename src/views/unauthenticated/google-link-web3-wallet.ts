@@ -21,6 +21,8 @@ async function ensureWalletConnected(): Promise<`0x${string}`> {
   return account.address;
 }
 
+const BASE_PATH = process.env.NODE_ENV === 'production' ? '/mate-app/' : '/';
+
 /** 지갑 서명 + 서버 로그인 + 토큰 저장 + 리다이렉트 */
 async function handleLoginClick(router: Navigo) {
   try {
@@ -31,12 +33,12 @@ async function handleLoginClick(router: Navigo) {
     tokenManager.set(token, address);
 
     // 플랫폼/웹뷰 파라미터 유지하여 홈으로 이동
-    let href = '/';
+    let href = BASE_PATH;
     if (platform) {
-      href = `/?platform=${platform}`;
+      href = `${BASE_PATH}?platform=${platform}`;
       if (isWebView) href += '&source=webview';
     } else if (isWebView) {
-      href = '/?source=webview';
+      href = `${BASE_PATH}?source=webview`;
     }
     location.href = href;
   } catch (err) {

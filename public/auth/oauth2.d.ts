@@ -1,6 +1,7 @@
 export declare function oauth2Start(provider: string): void;
 export declare function oauth2LoginWithIdToken(provider: string, idToken: string, nonce: string): Promise<{
     ok: boolean;
+    sessionId: string;
 }>;
 export type OAuth2MeResult = {
     ok?: boolean;
