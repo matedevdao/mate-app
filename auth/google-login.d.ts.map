@@ -1,1 +1,1 @@
-{"version":3,"file":"google-login.d.ts","sourceRoot":"","sources":["../../src/auth/google-login.ts"],"names":[],"mappings":"AAQA,wBAAgB,WAAW,SAQ1B;AAGD,wBAAsB,YAAY,kBAUjC"}
+{"version":3,"file":"google-login.d.ts","sourceRoot":"","sources":["../../src/auth/google-login.ts"],"names":[],"mappings":"AAGA,wBAAgB,WAAW,SAQ1B;AAGD,wBAAsB,YAAY,kBAUjC"}
