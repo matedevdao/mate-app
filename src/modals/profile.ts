@@ -2,8 +2,8 @@ import { createJazzicon, logout, tokenManager } from "@gaiaprotocol/client-commo
 import { el } from "@webtaku/el";
 import Navigo from "navigo";
 import { getAddress, zeroAddress } from "viem";
-import { fetchGoogleMeByWallet, unlinkGoogleWeb3WalletByToken } from "../api/google";
 import { googleLogin, googleLogout } from "../auth/google-login";
+import { oauth2MeByToken, oauthUnlinkWalletByToken } from "../auth/oauth2";
 import { profileService } from "../services/profile";
 import { shortenAddress } from "../utils/address";
 import { createProfileFormModal } from "./profile-form";
@@ -129,7 +129,7 @@ function createProfileModal(router: Navigo): HTMLElement {
           await withLoading(async () => {
             const t = tokenManager.getToken();
             if (!t) throw new Error('인증 토큰이 없습니다.');
-            await unlinkGoogleWeb3WalletByToken(t);
+            await oauthUnlinkWalletByToken();
             await googleLogout();
             await refreshGoogleLinkState(); // 해제 후 상태 즉시 갱신
           }, '연결 해제 중...');
@@ -171,16 +171,16 @@ function createProfileModal(router: Navigo): HTMLElement {
         setLinkedUI(false);
         return;
       }
-      const me = await fetchGoogleMeByWallet(t);
-      const linked = !!(me?.ok && me?.google_sub);
+      const me = await oauth2MeByToken('google');
+      const linked = !!(me?.ok && me?.sub);
       setLinkedUI(linked);
 
       // 연결된 이메일을 Unlink 항목 부제목으로 표시
       if (unlinkItemEl) {
         const labelP = unlinkItemEl.querySelector('ion-label > p') as HTMLElement | null;
         if (labelP) {
-          labelP.textContent = linked && me?.profile?.email
-            ? `연결된 계정: ${me.profile.email}`
+          labelP.textContent = linked && me?.email
+            ? `연결된 계정: ${me.email}`
             : '지갑에서 Google 계정 연결을 해제합니다.';
         }
       }

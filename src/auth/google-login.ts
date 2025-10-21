@@ -1,10 +1,5 @@
-import { verifyGoogleLogin } from "../api/google";
 import { isWebView, platform } from "../platform";
-
-declare const API_BASE_URI: string;
-
-const GOOGLE_LOGIN_PATH = `${API_BASE_URI}/google-login/mateapp`;
-const GOOGLE_LOGOUT_PATH = `${API_BASE_URI}/google-logout/mateapp`;
+import { oauth2LoginWithIdToken, oauth2Logout, oauth2Start } from "./oauth2";
 
 export function googleLogin() {
   if (isWebView && (window as any).Native?.signInWithGoogle) {
@@ -12,7 +7,7 @@ export function googleLogin() {
   } else if (isWebView && (window as any).Android?.signInWithGoogle) {
     (window as any).Android.signInWithGoogle()
   } else {
-    location.href = GOOGLE_LOGIN_PATH
+    oauth2Start('google')
   }
 }
 
@@ -25,7 +20,7 @@ export async function googleLogout() {
     (window as any).Android.signOutFromGoogle()
     return new Promise<void>(resolve => signOutResolve = resolve)
   } else {
-    location.href = GOOGLE_LOGOUT_PATH
+    await oauth2Logout()
   }
 }
 
@@ -34,8 +29,8 @@ if (isWebView) {
     const { idToken, nonce } = e.detail
     try {
       // 서버에서 구글 공개키로 ID 토큰 검증 + nonce 검증 + aud(=WEB_CLIENT_ID) 검증 필수
-      const { ok } = await verifyGoogleLogin({ provider: 'google', idToken, nonce })
-      if (ok) location.href = `/?platform=${platform}&source=webview`;
+      const { ok } = await oauth2LoginWithIdToken('google', idToken, nonce)
+      if (ok) location.href = `https://matedevdao.github.io/mate-app/?platform=${platform}&source=webview`;
       else {
         const toast = document.createElement("ion-toast");
         toast.message = `Google sign-in failed. ${e.detail.message}`;

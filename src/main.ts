@@ -8,7 +8,6 @@ import Navigo from 'navigo';
 import { getAddress } from 'viem';
 
 // ===== New auth/link APIs pulled from Valhalla =====
-import { fetchGoogleMe, GoogleMe, linkGoogleWeb3Wallet, unlinkGoogleWeb3WalletBySession } from './api/google';
 import { validateToken } from './auth/validate';
 
 // ===== App-specific APIs kept from mate-app =====
@@ -16,6 +15,8 @@ import { fetchMainNftsWithInfo } from './api/main-nfts-with-info';
 import { fetchProfiles } from './api/profile';
 
 // ===== Views =====
+import { oauthLinkWallet, oauth2Me, OAuth2MeResult, oauthUnlinkWalletBySession } from './auth/oauth2';
+import { sessionManager } from './auth/session-manager';
 import './main.css';
 import { createChatRoomView } from './views/authenticated/chatroom';
 import { createHomeView } from './views/authenticated/home';
@@ -81,6 +82,9 @@ document.body.appendChild(createRainbowKit());
 // Environment / WebView detection
 // ------------------------------
 const urlParams = new URLSearchParams(window.location.search);
+const sid = urlParams.get('session');
+if (sid) sessionManager.set(sid);
+
 const isWebView = urlParams.get('source') === 'webview';
 
 // ------------------------------
@@ -204,31 +208,31 @@ function showUnauthed(factory: () => View) {
 // ------------------------------
 // Auth helpers (single source of truth)
 // ------------------------------
-async function tryAutoLinkIfNeeded(googleMe: GoogleMe | null): Promise<'ok' | 'to-link' | 'skip'> {
+async function tryAutoLinkIfNeeded(meResult: OAuth2MeResult | null): Promise<'ok' | 'to-link' | 'skip'> {
   const walletHasToken = tokenManager.has();
 
   // 1) Complete Google session → inject immediately
-  if (googleMe?.ok && googleMe.wallet_address && googleMe.token) {
-    tokenManager.set(googleMe.token, googleMe.wallet_address);
+  if (meResult?.ok && meResult.wallet_address && meResult.token) {
+    tokenManager.set(meResult.token, meResult.wallet_address);
     return 'ok';
   }
 
   // 2) Google logged in but wallet token missing → go to link screen
-  if (googleMe?.ok && !walletHasToken) {
+  if (meResult?.ok && !walletHasToken) {
     return 'to-link';
   }
 
   // 3) Wallet token exists & Google session present but incomplete → try server-side link using wallet auth
-  if (walletHasToken && googleMe?.ok) {
+  if (walletHasToken && meResult?.ok) {
     const authToken = tokenManager.getToken();
     if (!authToken) return 'to-link';
     try {
-      const linkRes = await linkGoogleWeb3Wallet(authToken);
+      const linkRes = await oauthLinkWallet();
       if (linkRes?.ok) {
         if (linkRes.token && linkRes.wallet_address) {
           tokenManager.set(linkRes.token, linkRes.wallet_address);
         } else {
-          const refreshed = await fetchGoogleMe();
+          const refreshed = await oauth2Me();
           if (refreshed.ok && refreshed.token && refreshed.wallet_address) {
             tokenManager.set(refreshed.token, refreshed.wallet_address);
           }
@@ -248,22 +252,22 @@ async function tryAutoLinkIfNeeded(googleMe: GoogleMe | null): Promise<'ok' | 't
 async function determineFlow(): Promise<'ok' | 'to-login' | 'to-link'> {
   let walletHasToken = tokenManager.has();
 
-  let googleMe: GoogleMe | null = null;
-  try { googleMe = await fetchGoogleMe(); } catch { googleMe = null; }
+  let meResult: OAuth2MeResult | null = null;
+  try { meResult = await oauth2Me(); } catch { meResult = null; }
 
-  const linkResult = await tryAutoLinkIfNeeded(googleMe);
+  const linkResult = await tryAutoLinkIfNeeded(meResult);
 
   // tokenManager may be mutated in tryAutoLinkIfNeeded
   walletHasToken = tokenManager.has();
 
   // If neither Google nor wallet auth exists, go to login
-  if (!googleMe?.ok && !walletHasToken) return 'to-login';
+  if (!meResult?.ok && !walletHasToken) return 'to-login';
   if (linkResult === 'to-link') return 'to-link';
 
   const valid = await validateToken();
   if (!valid) {
-    if (walletHasToken && googleMe?.ok) {
-      try { await unlinkGoogleWeb3WalletBySession(); } catch (err) { console.error(err); }
+    if (walletHasToken && meResult?.ok) {
+      try { await oauthUnlinkWalletBySession(); } catch (err) { console.error(err); }
     }
     tokenManager.clear();
     return 'to-login';
