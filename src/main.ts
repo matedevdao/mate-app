@@ -1,5 +1,5 @@
 import { chatProfileService } from '@gaiaprotocol/chat-client';
-import { createRainbowKit, tokenManager } from '@gaiaprotocol/client-common';
+import { tokenManager } from '@gaiaprotocol/client-common';
 import { BackButtonEvent, setupConfig } from '@ionic/core';
 import { defineCustomElements } from '@ionic/core/loader';
 import { initializeApp } from 'firebase/app';
@@ -15,8 +15,9 @@ import { fetchMainNftsWithInfo } from './api/main-nfts-with-info';
 import { fetchProfiles } from './api/profile';
 
 // ===== Views =====
-import { oauthLinkWallet, oauth2Me, OAuth2MeResult, oauthUnlinkWalletBySession } from './auth/oauth2';
+import { oauth2Me, OAuth2MeResult, oauthLinkWallet, oauthUnlinkWalletBySession } from './auth/oauth2';
 import { sessionManager } from './auth/session-manager';
+import { createRainbowKit } from './components/wallet';
 import './main.css';
 import { createChatRoomView } from './views/authenticated/chatroom';
 import { createHomeView } from './views/authenticated/home';

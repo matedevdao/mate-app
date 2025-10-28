@@ -1,4 +1,4 @@
-import { openWalletConnectModal, tokenManager, wagmiConfig } from '@gaiaprotocol/client-common';
+import { tokenManager } from '@gaiaprotocol/client-common';
 import { SlButton } from '@shoelace-style/shoelace';
 import { disconnect, getAccount, watchAccount } from '@wagmi/core';
 import { el } from '@webtaku/el';
@@ -8,6 +8,7 @@ import { requestLogin } from '../../auth/login';
 import { signMessage } from '../../auth/siwe';
 import { showErrorAlert } from '../../components/alert';
 import { hideLoading, showLoading } from '../../components/loading';
+import { openWalletConnectModal, wagmiConfig } from '../../components/wallet';
 import { isWebView, platform } from '../../platform';
 import { View } from '../view';
 import './login.css';
