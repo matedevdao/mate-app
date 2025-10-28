@@ -32,7 +32,7 @@ export function createContactUsItem(): HTMLElement {
     button: true,
     detail: true,
     onclick: () => {
-      const subject = encodeURIComponent('[MateDAO] Contact');
+      const subject = encodeURIComponent('[Mate App] 제목 작성');
       const body = encodeURIComponent('안녕하세요,\n\n문의 내용을 아래에 작성해 주세요.\n\n감사합니다.');
       window.location.href =
         `mailto:matedevdaocontact@gmail.com?subject=${subject}&body=${body}`;
