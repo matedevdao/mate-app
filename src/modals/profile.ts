@@ -4,9 +4,45 @@ import Navigo from "navigo";
 import { getAddress, zeroAddress } from "viem";
 import { googleLogin, googleLogout } from "../auth/google-login";
 import { oauth2MeByToken, oauthUnlinkWalletByToken } from "../auth/oauth2";
+import { launchInstallFlow } from "../components/install-ui";
+import { isMobile, isStandalone, isWebView } from "../platform";
 import { profileService } from "../services/profile";
 import { shortenAddress } from "../utils/address";
 import { createProfileFormModal } from "./profile-form";
+
+export function createInstallAppItem(): HTMLElement | null {
+  // WebView/설치됨 환경에서는 숨김
+  if (!(isMobile && !isWebView && !isStandalone)) return null;
+
+  return el('ion-item', {
+    button: true,
+    detail: true,
+    onclick: () => {
+      launchInstallFlow().then((result) => console.log('[install]', result));
+      (document.getElementById('main-menu') as any)?.dismiss?.();
+    }
+  },
+    el('ion-icon', { slot: 'start', name: 'download' }),
+    el('ion-label', '앱 설치')
+  );
+}
+
+export function createContactUsItem(): HTMLElement {
+  return el('ion-item', {
+    button: true,
+    detail: true,
+    onclick: () => {
+      const subject = encodeURIComponent('[MateDAO] Contact');
+      const body = encodeURIComponent('안녕하세요,\n\n문의 내용을 아래에 작성해 주세요.\n\n감사합니다.');
+      window.location.href =
+        `mailto:matedevdaocontact@gmail.com?subject=${subject}&body=${body}`;
+      (document.getElementById('main-menu') as any)?.dismiss?.();
+    }
+  },
+    el('ion-icon', { slot: 'start', name: 'mail' }),
+    el('ion-label', '문의하기')
+  );
+}
 
 function createProfileModal(router: Navigo): HTMLElement {
   const _addr = tokenManager.getAddress();
@@ -136,6 +172,9 @@ function createProfileModal(router: Navigo): HTMLElement {
           await showToast('Google 계정 연결이 해제되었습니다.');
         }
       )),
+
+      createInstallAppItem(),
+      createContactUsItem(),
 
       menuItem('log-out', '로그아웃', '', async () => {
         await withLoading(async () => {

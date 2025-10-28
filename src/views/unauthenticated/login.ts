@@ -7,6 +7,8 @@ import { googleLogin } from '../../auth/google-login';
 import { requestLogin } from '../../auth/login';
 import { signMessage } from '../../auth/siwe';
 import { showErrorAlert } from '../../components/alert';
+import { launchInstallFlow } from '../../components/install-ui';
+import { isMobile, isStandalone, isWebView } from '../../platform';
 import { View } from '../view';
 import './login.css';
 import logoImage from './logo.png';
@@ -46,6 +48,23 @@ async function handleGoogleLogin(router: Navigo, btn: SlButton) { // <-- NEW
   } finally {
     btn.loading = false;
   }
+}
+
+async function handleInstallClick(btn: SlButton) {
+  btn.loading = true;
+  try {
+    const result = await launchInstallFlow();
+    console.log('[install]', result);
+  } finally {
+    btn.loading = false;
+  }
+}
+
+function handleContactClick() {
+  const subject = encodeURIComponent('[Mate App] Contact');
+  const body = encodeURIComponent('안녕하세요,\n\n문의 내용을 아래에 작성해 주세요.\n\n감사합니다.');
+  window.location.href =
+    `mailto:matedevdaocontact@gmail.com?subject=${subject}&body=${body}`;
 }
 
 export function createLoginView(router: Navigo): View {
@@ -128,6 +147,39 @@ export function createLoginView(router: Navigo): View {
   ) as SlButton;
   // ---------------------------------------------------
 
+  // ----- NEW: 앱 설치 & 문의하기 링크형 버튼 -----
+  const shouldShowInstall =
+    isMobile && !isWebView && !isStandalone;
+
+  const installLink = shouldShowInstall
+    ? el(
+      'sl-button.login-link',
+      {
+        variant: 'text',        // 버튼 모양 대신 링크형
+        onclick: async (e: MouseEvent) => {
+          await handleInstallClick(e.currentTarget as SlButton);
+        }
+      },
+      '앱 설치하기'
+    ) as SlButton
+    : null;
+
+  const contactLink = el(
+    'sl-button.login-link',
+    {
+      variant: 'text',          // 링크형
+      onclick: handleContactClick
+    },
+    '문의하기'
+  ) as SlButton;
+
+  const bottomLinks = el(
+    '.login-bottom-links',
+    installLink,
+    contactLink
+  );
+  // ----------------------------------------
+
   const wrapper = el(
     '.login-wrapper',
     logo,
@@ -144,8 +196,9 @@ export function createLoginView(router: Navigo): View {
     ),
     connectButton,
     signButton,
-    orDivider,      // <-- NEW
-    googleButton,   // <-- NEW
+    orDivider,
+    googleButton,
+    bottomLinks,
   );
 
   const unwatch = watchAccount(wagmiConfig, {

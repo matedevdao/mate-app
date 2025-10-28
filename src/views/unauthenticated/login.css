@@ -144,3 +144,66 @@
   margin: 10px 0;
   word-break: keep-all;
 }
+
+/* 링크형 버튼 공통 스타일 */
+.login-link::part(base) {
+  background: none;
+  border: none;
+  color: #444;
+  font-size: 14px;
+  text-decoration: underline;
+  padding: 4px 0;
+  height: auto;
+  box-shadow: none;
+}
+
+.login-link::part(base):hover {
+  color: #000;
+  text-decoration: underline;
+}
+
+.login-link::part(base):active {
+  color: #666;
+}
+
+.login-link::part(base):focus-visible {
+  outline: none;
+  text-decoration: underline;
+  box-shadow: none;
+}
+
+.login-bottom-links {
+  display: flex;
+  flex-direction: column;
+  /* 기본(PC, 데스크톱)은 세로 배치 */
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* sl-button 링크형 스타일은 이전과 동일하게 유지 */
+.login-link::part(base) {
+  background: none;
+  border: none;
+  color: #444;
+  font-size: 14px;
+  text-decoration: underline;
+  padding: 4px 0;
+  height: auto;
+  box-shadow: none;
+}
+
+.login-link::part(base):hover {
+  color: #000;
+  text-decoration: underline;
+}
+
+/* ✅ 모바일(최대 480px)일 때는 좌우 배치 */
+@media (max-width: 480px) {
+  .login-bottom-links {
+    flex-direction: row;
+    justify-content: center;
+    gap: 16px;
+    /* 버튼 간 간격 */
+  }
+}
