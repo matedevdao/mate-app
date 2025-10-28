@@ -16,6 +16,6 @@
   ],
   "start_url": "/mate-app/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#ffffff"
+  "background_color": "#f7d602",
+  "theme_color": "#f7f7f7"
 }
