@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@gaiaprotocol/chat-client": "^0.0.5",
-    "@gaiaprotocol/client-common": "^0.0.11",
+    "@gaiaprotocol/client-common": "^0.0.12",
     "@ionic/core": "^8.7.7",
     "@webtaku/el": "^0.1.1",
     "color": "^5.0.2",
