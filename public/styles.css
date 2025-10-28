@@ -2378,6 +2378,10 @@ body {
 	background-color: #fff;
 }
 
+body {
+	padding-bottom: env(safe-area-inset-bottom);
+}
+
 :root {
 	--ion-color-primary: #f7d602;
 	--ion-color-primary-rgb: 247, 214, 2;
