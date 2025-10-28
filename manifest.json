@@ -1,0 +1,21 @@
+{
+  "short_name": "Mate",
+  "name": "Mate",
+  "description": "Mate는 Kaia NFT 홀더들이 모여 거버넌스로 운영하는 메신저 서비스입니다.",
+  "icons": [
+    {
+      "src": "/mate-app/images/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/mate-app/images/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff"
+}
