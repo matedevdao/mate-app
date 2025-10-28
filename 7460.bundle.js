@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkmate_app=self.webpackChunkmate_app||[]).push([[7460],{77460:(a,e,p)=>{p.r(e),p.d(e,{default:()=>s.n});var s=p(88205)}}]);
