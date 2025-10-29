@@ -9,6 +9,41 @@ import { isMobile, isStandalone, isWebView } from "../platform";
 import { profileService } from "../services/profile";
 import { shortenAddress } from "../utils/address";
 import { createProfileFormModal } from "./profile-form";
+import { fetchMyMainNft, setMainNft } from "../api/main-nft";
+import { createSelectMainNftModal } from "./select-main-nft";
+import { fetchHeldNfts, HeldNft } from "../api/nfts";
+import { fetchMainNftsWithInfo } from "../api/main-nfts-with-info";
+import { chatProfileService } from "@gaiaprotocol/chat-client";
+
+function getMyAccount(): string {
+  const token = tokenManager.getToken();
+  if (!token) return 'unknown';
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1] || ''));
+    return payload.sub || 'unknown';
+  } catch {
+    return 'unknown';
+  }
+}
+
+// 상대 경로 이미지 보정 (환경에 맞게 수정)
+function toImageUrl(img?: string | null) {
+  if (!img) return '';
+  try {
+    return new URL(img).href; // 절대 경로면 그대로
+  } catch {
+    return `https://pub-b5f5f68564ba4ce693328fe84e1a6c57.r2.dev/${img}`; // 상대 경로면 프리픽스
+  }
+}
+
+const BASE_PATH = process.env.NODE_ENV === 'production' ? '/mate-app/' : '/';
+
+function getCurrentRoomFromPath(): string | null {
+  let path = location.pathname || '';
+  if (path.startsWith(BASE_PATH)) path = path.slice(BASE_PATH.length);
+  const seg = path.split('/').filter(Boolean)[0] || '';
+  return seg || null;
+}
 
 export function createInstallAppItem(): HTMLElement | null {
   // WebView/설치됨 환경에서는 숨김
@@ -136,6 +171,62 @@ function createProfileModal(router: Navigo): HTMLElement {
     profileCard,
 
     el('ion-list',
+      menuItem('happy', '메인 NFT 선택', '현재 방의 메인 NFT를 선택합니다.', async () => {
+        const account = getMyAccount();
+        if (!account || account === 'unknown') return;
+
+        const roomId = getCurrentRoomFromPath();
+        if (!roomId) {
+          showToast('방 정보를 찾을 수 없습니다.');
+          return;
+        }
+
+        try {
+          const mine = await fetchMyMainNft(roomId);
+          const hasMain = !!mine?.token_id;
+
+          if (!hasMain) {
+            const modal = createSelectMainNftModal({
+              loadItems: async () => {
+                const nfts: HeldNft[] = await fetchHeldNfts(account, { room: roomId });
+                return nfts.map(n => ({
+                  id: String(n.id ?? ''),
+                  name: n.type ? `${n.type} #${n.id}` : `NFT #${n.id}`,
+                  image: toImageUrl(n.image),
+                  contractAddr: n.contract_addr,
+                }));
+              },
+              onSelected: async (contractAddr: string, tokenId: string) => {
+                await setMainNft({ room: roomId, contractAddr, tokenId });
+
+                // 아바타가 메인 NFT로 바뀌는 UX가 있다면, 서버 기준으로 재동기화만 수행
+                const nftRows = await fetchMainNftsWithInfo(roomId, [roomId]);
+
+                const imageMap = new Map<string, string | null>();
+                for (const row of nftRows) {
+                  const addr = getAddress(row.user_address);
+                  imageMap.set(addr, row.nft?.image ?? null);
+                }
+
+                for (const addr of [account]) {
+                  const prev = chatProfileService.getCached(addr);
+                  chatProfileService.setProfile(getAddress(addr), prev?.nickname ?? undefined, imageMap.get(addr) ?? undefined);
+                }
+              },
+              labels: {
+                title: '메인 NFT 선택',
+                description: '이 방에서 사용할 메인 NFT를 선택하세요.',
+              },
+            });
+
+            document.body.appendChild(modal);
+            (modal as any).present?.() || (modal as any).showModal?.();
+          }
+        } catch (e) {
+          console.error('메인 NFT 확인/표시 중 오류', e);
+        }
+      }),
+
       menuItem('person-circle', '프로필 편집', '닉네임과 자기소개를 수정합니다.', () => {
         const formModal = createProfileFormModal(myAddress, token);
         document.body.appendChild(formModal);

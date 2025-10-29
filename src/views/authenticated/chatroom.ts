@@ -10,6 +10,7 @@ import { fetchMainNftsWithInfo } from '../../api/main-nfts-with-info';
 import { fetchHeldNfts, HeldNft } from '../../api/nfts';
 import { createSelectMainNftModal } from '../../modals/select-main-nft';
 import { profileService } from '../../services/profile';
+import { changeTitle } from './layout';
 
 function getMyAccount(): string {
   const token = tokenManager.getToken();
@@ -30,6 +31,13 @@ function toImageUrl(img?: string | null) {
   } catch {
     return `https://pub-b5f5f68564ba4ce693328fe84e1a6c57.r2.dev/${img}`; // 상대 경로면 프리픽스
   }
+}
+
+const ROOM_NAMES: Record<string, string> = {
+  'mates': '메이트 홀더 모임',
+  'sigor-sparrows': '시고르 참새 홀더 모임',
+  'kcd-kongz': 'KCD 콩즈 홀더 모임',
+  'babyping': '베이비핑 홀더 모임',
 }
 
 function createChatRoomView(router: Navigo, roomId: string): View & {
@@ -114,6 +122,10 @@ function createChatRoomView(router: Navigo, roomId: string): View & {
       console.error('메인 NFT 확인/표시 중 오류', e);
     }
   })();
+
+  setTimeout(() => {
+    changeTitle(ROOM_NAMES[roomId] || '방')
+  })
 
   return {
     el: page,
