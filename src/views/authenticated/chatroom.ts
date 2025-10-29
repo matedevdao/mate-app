@@ -93,7 +93,7 @@ function createChatRoomView(router: Navigo, roomId: string): View & {
             }));
           },
           onSelected: async (contractAddr: string, tokenId: string) => {
-            await setMainNft({ collection: roomId, contractAddr, tokenId });
+            await setMainNft({ room: roomId, contractAddr, tokenId });
             // 아바타가 메인 NFT로 바뀌는 UX가 있다면, 서버 기준으로 재동기화만 수행
             chatProfileService.preload([account]);
             applyCachedProfile();
