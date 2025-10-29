@@ -200,7 +200,7 @@ function createProfileModal(router: Navigo): HTMLElement {
               await setMainNft({ room: roomId, contractAddr, tokenId });
 
               // 아바타가 메인 NFT로 바뀌는 UX가 있다면, 서버 기준으로 재동기화만 수행
-              const nftRows = await fetchMainNftsWithInfo(roomId, [roomId]);
+              const nftRows = await fetchMainNftsWithInfo(roomId, [account]);
 
               const imageMap = new Map<string, string | null>();
               for (const row of nftRows) {
