@@ -141,6 +141,7 @@ function getCurrentRoomFromPath(): string | null {
 // Chat profile hydration
 // ------------------------------
 chatProfileService.init(async (addresses) => {
+  console.log(addresses);
   const normalized = addresses.map(getAddress);
   const room = getCurrentRoomFromPath();
 

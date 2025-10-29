@@ -3,8 +3,8 @@ import { el } from '@webtaku/el';
 export type NftItem = {
   id: string;
   name?: string;
-  image?: string | null;       // 이미지 URL(상대/절대)
-  contractAddr?: string;       // ✅ 아이템별 컨트랙트 주소(없으면 defaultContractAddr 사용)
+  image?: string | null;
+  contractAddr?: string;
 };
 
 type Labels = {
@@ -19,19 +19,12 @@ type Labels = {
 };
 
 type SelectMainNftOptions = {
-  /** 현재 컨텍스트(콜렉션)에서 아이템 로드 */
   loadItems: () => Promise<NftItem[]>;
-  /** 선택 완료 콜백: (컨트랙트 주소, 토큰 ID) */
   onSelected: (contractAddr: string, tokenId: string) => Promise<void> | void;
-  /** 미리 선택되어 있어야 하는 id(선택 강조용, 선택 유지) */
   preselectedId?: string | null;
-  /** 표시 문구 커스터마이즈 */
   labels?: Labels;
-  /** 격자 열 수 (기본 2) */
   columns?: number;
-  /** 카드 이미지 높이 (기본 140px) */
   cardImageHeight?: number;
-  /** ✅ 아이템에 contractAddr가 없을 때 사용할 기본 컨트랙트 주소 */
   defaultContractAddr?: string;
 };
 
@@ -46,7 +39,6 @@ export function createSelectMainNftModal(options: SelectMainNftOptions) {
     defaultContractAddr,
   } = options;
 
-  // 한글 디폴트 레이블
   const t = {
     title: L.title ?? '메인 NFT 선택',
     description: L.description ?? '프로필 이미지로 사용할 NFT를 선택하세요.',
@@ -71,18 +63,31 @@ export function createSelectMainNftModal(options: SelectMainNftOptions) {
   );
 
   /* ---------- Content ---------- */
-  const content = el('ion-content.ion-padding');
+  // ⬇️ ion-content 기본 패딩을 줄였습니다(상하좌우 8px).
+  const content = el(
+    'ion-content',
+    {
+      style: `
+        --padding-start:8px;
+        --padding-end:8px;
+        --padding-top:8px;
+        --padding-bottom:8px;
+      `,
+    }
+  );
 
+  // ⬇️ 설명 하단 여백 축소
   const desc = el('p', {
-    style: 'margin-bottom:12px;color:var(--ion-color-medium)'
+    style: 'margin-bottom:8px;color:var(--ion-color-medium)'
   }, t.description);
 
+  // ⬇️ 카드 간격(gap)과 전체 아래 여백 축소
   const grid = el('div', {
     style: `
       display:grid;
       grid-template-columns: repeat(${Math.max(1, columns)}, minmax(0, 1fr));
-      gap:12px;
-      margin-bottom:16px;
+      gap:8px;                 /* 기존 12px -> 8px */
+      margin-bottom:12px;      /* 기존 16px -> 12px */
     `,
   });
 
@@ -92,8 +97,9 @@ export function createSelectMainNftModal(options: SelectMainNftOptions) {
 
   grid.append(statusRow);
 
+  // ⬇️ 푸터 버튼 간격 축소 + 상단 여백 조금만
   const footer = el('div', {
-    style: 'display:flex;gap:8px;justify-content:flex-end'
+    style: 'display:flex;gap:6px;justify-content:flex-end;margin-top:4px'
   });
 
   const cancelBtn = el('ion-button', { fill: 'outline', onclick: () => (modal as any).dismiss?.() }, t.cancel);
@@ -104,7 +110,6 @@ export function createSelectMainNftModal(options: SelectMainNftOptions) {
   modal.append(header, content);
 
   /* ---------- 내부 상태 ---------- */
-  // ✅ 선택 상태를 (토큰ID + 컨트랙트 주소)로 관리
   let selected: { id: string; contract: string } | null = preselectedId
     ? { id: preselectedId, contract: defaultContractAddr ?? '' }
     : null;
@@ -132,7 +137,6 @@ export function createSelectMainNftModal(options: SelectMainNftOptions) {
       style: `width:100%;height:${imageHeight};object-fit:cover;background:#111;border-bottom:1px solid rgba(255,255,255,.06)`,
     });
 
-    // 이미지 로드 실패 시 플레이스홀더
     const onImgError = () => {
       const ph = el('div', {
         style: `
@@ -150,11 +154,11 @@ export function createSelectMainNftModal(options: SelectMainNftOptions) {
       (img as any).replaceWith?.(ph);
     };
     (img as any).addEventListener?.('ionError', onImgError);
-    (img as any).onerror = onImgError as any; // native fallback
+    (img as any).onerror = onImgError as any;
 
     const nameText = item.name || t.unnamed;
-    const idBadge = item.id.length > 10 ? `${item.id.slice(0, 6)}…${item.id.slice(-4)}` : item.id;
 
+    // ⬇️ 카드 내부 패딩 축소 + 숫자 배지 제거
     const card = el('ion-card',
       {
         dataset: { id: item.id, contract: item.contractAddr ?? '' },
@@ -166,7 +170,6 @@ export function createSelectMainNftModal(options: SelectMainNftOptions) {
         `,
         onclick: () => {
           const contract = item.contractAddr ?? defaultContractAddr ?? '';
-          // 컨트랙트 주소가 없으면 선택 불가 처리
           if (!contract) {
             confirmBtn.disabled = true;
             console.warn('contractAddr가 지정되지 않았습니다. defaultContractAddr 옵션을 설정하거나 아이템에 contractAddr을 제공하세요.');
@@ -180,11 +183,16 @@ export function createSelectMainNftModal(options: SelectMainNftOptions) {
       },
       img,
       el('ion-card-content',
-        el('div', {
-          style: 'display:flex;align-items:center;justify-content:space-between;gap:8px'
+        {
+          style: `
+            --padding-start:10px;
+            --padding-end:10px;
+            --padding-top:8px;
+            --padding-bottom:8px;
+          `
         },
+        el('div', { style: 'display:flex;align-items:center;justify-content:flex-start' },
           el('strong', nameText),
-          el('ion-badge', idBadge),
         ),
       ),
     ) as HTMLElement;
@@ -210,7 +218,6 @@ export function createSelectMainNftModal(options: SelectMainNftOptions) {
 
       for (const item of items) grid.append(renderItemCard(item));
 
-      // 미리 선택된 항목 강조
       if (selected?.id) {
         const exists = items.some(i => i.id === selected!.id);
         if (!exists) selected = null;
@@ -234,7 +241,7 @@ export function createSelectMainNftModal(options: SelectMainNftOptions) {
     if (!selected?.id || !selected?.contract) return;
     (confirmBtn as any).disabled = true;
     try {
-      await onSelected(selected.contract, selected.id); // ✅ 컨트랙트+토큰ID 함께 전달
+      await onSelected(selected.contract, selected.id);
       await (modal as any).dismiss?.();
     } catch (e) {
       console.error('Failed to set main NFT', e);
