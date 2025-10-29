@@ -13,18 +13,13 @@ type Labels = {
     empty?: string;
     loadError?: string;
     unnamed?: string;
-    searchPlaceholder?: string;
-    noContract?: string;
-    selected?: string;
 };
 type SelectMainNftOptions = {
     loadItems: () => Promise<NftItem[]>;
     onSelected: (contractAddr: string, tokenId: string) => Promise<void> | void;
     preselectedId?: string | null;
     labels?: Labels;
-    /** 고정 열 수를 원할 때 사용(기본 자동 배치) */
-    columns?: number | null;
-    /** 카드 이미지 높이(기본 160px) */
+    columns?: number;
     cardImageHeight?: number;
     defaultContractAddr?: string;
 };
