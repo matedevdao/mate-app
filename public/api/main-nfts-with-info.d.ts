@@ -18,9 +18,9 @@ export type MainNftWithInfo = {
 /**
  * 여러 주소의 메인 NFT 정보를 조회 (상세 NFT 포함)
  * 서버: POST /get-main-nfts-with-info
- * body: { collection, addresses }
+ * body: { room, addresses }
  */
-export declare function fetchMainNftsWithInfo(collection: string, addresses: string[]): Promise<MainNftWithInfo[]>;
+export declare function fetchMainNftsWithInfo(room: string, addresses: string[]): Promise<MainNftWithInfo[]>;
 /** 편의: 단일 주소만 조회 */
-export declare function fetchMyMainNftWithInfo(collection: string, address: string): Promise<MainNftWithInfo | null>;
+export declare function fetchMyMainNftWithInfo(room: string, address: string): Promise<MainNftWithInfo | null>;
 //# sourceMappingURL=main-nfts-with-info.d.ts.map

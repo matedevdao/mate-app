@@ -128,9 +128,9 @@ if (!isWebView) {
 }
 
 // ------------------------------
-// Helper: path -> current collection (for room images)
+// Helper: path -> current room (for room images)
 // ------------------------------
-function getCurrentCollectionFromPath(): string | null {
+function getCurrentRoomFromPath(): string | null {
   let path = location.pathname || '';
   if (path.startsWith(BASE_PATH)) path = path.slice(BASE_PATH.length);
   const seg = path.split('/').filter(Boolean)[0] || '';
@@ -142,12 +142,12 @@ function getCurrentCollectionFromPath(): string | null {
 // ------------------------------
 chatProfileService.init(async (addresses) => {
   const normalized = addresses.map(getAddress);
-  const collection = getCurrentCollectionFromPath();
+  const room = getCurrentRoomFromPath();
 
   const profiles = await fetchProfiles(normalized as unknown as (`0x${string}`)[]);
 
-  const nftRows = collection
-    ? await fetchMainNftsWithInfo(collection, normalized)
+  const nftRows = room
+    ? await fetchMainNftsWithInfo(room, normalized)
     : [];
 
   const imageMap = new Map<string, string | null>();
