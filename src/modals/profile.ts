@@ -183,45 +183,44 @@ function createProfileModal(router: Navigo): HTMLElement {
 
         try {
           const mine = await fetchMyMainNft(roomId);
-          const hasMain = !!mine?.token_id;
 
-          if (!hasMain) {
-            const modal = createSelectMainNftModal({
-              loadItems: async () => {
-                const nfts: HeldNft[] = await fetchHeldNfts(account, { room: roomId });
-                return nfts.map(n => ({
-                  id: String(n.id ?? ''),
-                  name: n.type ? `${n.type} #${n.id}` : `NFT #${n.id}`,
-                  image: toImageUrl(n.image),
-                  contractAddr: n.contract_addr,
-                }));
-              },
-              onSelected: async (contractAddr: string, tokenId: string) => {
-                await setMainNft({ room: roomId, contractAddr, tokenId });
+          const modal = createSelectMainNftModal({
+            preselectedId: mine?.token_id ?? null,
 
-                // 아바타가 메인 NFT로 바뀌는 UX가 있다면, 서버 기준으로 재동기화만 수행
-                const nftRows = await fetchMainNftsWithInfo(roomId, [roomId]);
+            loadItems: async () => {
+              const nfts: HeldNft[] = await fetchHeldNfts(account, { room: roomId });
+              return nfts.map(n => ({
+                id: String(n.id ?? ''),
+                name: n.type ? `${n.type} #${n.id}` : `NFT #${n.id}`,
+                image: toImageUrl(n.image),
+                contractAddr: n.contract_addr,
+              }));
+            },
+            onSelected: async (contractAddr: string, tokenId: string) => {
+              await setMainNft({ room: roomId, contractAddr, tokenId });
 
-                const imageMap = new Map<string, string | null>();
-                for (const row of nftRows) {
-                  const addr = getAddress(row.user_address);
-                  imageMap.set(addr, row.nft?.image ?? null);
-                }
+              // 아바타가 메인 NFT로 바뀌는 UX가 있다면, 서버 기준으로 재동기화만 수행
+              const nftRows = await fetchMainNftsWithInfo(roomId, [roomId]);
 
-                for (const addr of [account]) {
-                  const prev = chatProfileService.getCached(addr);
-                  chatProfileService.setProfile(getAddress(addr), prev?.nickname ?? undefined, imageMap.get(addr) ?? undefined);
-                }
-              },
-              labels: {
-                title: '메인 NFT 선택',
-                description: '이 방에서 사용할 메인 NFT를 선택하세요.',
-              },
-            });
+              const imageMap = new Map<string, string | null>();
+              for (const row of nftRows) {
+                const addr = getAddress(row.user_address);
+                imageMap.set(addr, row.nft?.image ?? null);
+              }
 
-            document.body.appendChild(modal);
-            (modal as any).present?.() || (modal as any).showModal?.();
-          }
+              for (const addr of [account]) {
+                const prev = chatProfileService.getCached(addr);
+                chatProfileService.setProfile(getAddress(addr), prev?.nickname ?? undefined, imageMap.get(addr) ?? undefined);
+              }
+            },
+            labels: {
+              title: '메인 NFT 선택',
+              description: '이 방에서 사용할 메인 NFT를 선택하세요.',
+            },
+          });
+
+          document.body.appendChild(modal);
+          (modal as any).present?.() || (modal as any).showModal?.();
         } catch (e) {
           console.error('메인 NFT 확인/표시 중 오류', e);
         }
