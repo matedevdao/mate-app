@@ -57,7 +57,7 @@ function createChatRoomView(router: Navigo, roomId: string): View & {
         const modal = createSelectMainNftModal({
           // 현재 방(컬렉션)의 내 보유 NFT 불러오기
           loadItems: async () => {
-            const nfts: HeldNft[] = await fetchHeldNfts(account, { collection: roomId });
+            const nfts: HeldNft[] = await fetchHeldNfts(account, { room: roomId });
             return nfts.map(n => ({
               id: String(n.id ?? ''),         // 서버 응답 키에 맞춰 token_id 또는 id 사용
               name: n.type ? `${n.type} #${n.id}` : `NFT #${n.id}`,

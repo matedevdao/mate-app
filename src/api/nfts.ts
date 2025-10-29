@@ -15,6 +15,7 @@ export type HeldNft = {
 
 export type FetchHeldNftsOptions = {
   collection?: string;     // 특정 컬렉션만 필터링할 때
+  room?: string;
   start?: number;          // 토큰 범위 시작 (백엔드가 지원하면)
   end?: number;            // 토큰 범위 끝
   cursor?: string;         // 페이지네이션 커서(지원 시)
@@ -36,6 +37,7 @@ export async function fetchHeldNfts(
 
   // 백엔드가 지원하는 쿼리만 붙여주세요.
   if (opts.collection) url.searchParams.set('collection', opts.collection);
+  if (opts.room) url.searchParams.set('room', opts.room);
   if (opts.start !== undefined) url.searchParams.set('start', String(opts.start));
   if (opts.end !== undefined) url.searchParams.set('end', String(opts.end));
   if (opts.limit !== undefined) url.searchParams.set('limit', String(opts.limit));
