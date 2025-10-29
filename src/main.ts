@@ -141,7 +141,6 @@ function getCurrentRoomFromPath(): string | null {
 // Chat profile hydration
 // ------------------------------
 chatProfileService.init(async (addresses) => {
-  console.log(addresses);
   const normalized = addresses.map(getAddress);
   const room = getCurrentRoomFromPath();
 
@@ -300,6 +299,7 @@ async function runAuthFlow(roomId: string | undefined) {
     }
 
     // Auth OK → decide content based on path
+    chatProfileService.clear();
     const view = roomId ? createChatRoomView(router, roomId) : createHomeView(router);
     showAuthed(view);
 

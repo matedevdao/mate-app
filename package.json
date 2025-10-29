@@ -11,7 +11,7 @@
     "deploy": "gh-pages -d public"
   },
   "dependencies": {
-    "@gaiaprotocol/chat-client": "^0.0.5",
+    "@gaiaprotocol/chat-client": "^0.0.6",
     "@gaiaprotocol/client-common": "^0.0.12",
     "@ionic/core": "^8.7.7",
     "@webtaku/el": "^0.1.1",

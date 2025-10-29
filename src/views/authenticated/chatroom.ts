@@ -4,7 +4,9 @@ import { el } from '@webtaku/el';
 import Navigo from 'navigo';
 import { View } from '../view';
 
+import { getAddress } from 'viem';
 import { fetchMyMainNft, setMainNft } from '../../api/main-nft';
+import { fetchMainNftsWithInfo } from '../../api/main-nfts-with-info';
 import { fetchHeldNfts, HeldNft } from '../../api/nfts';
 import { createSelectMainNftModal } from '../../modals/select-main-nft';
 import { profileService } from '../../services/profile';
@@ -54,7 +56,12 @@ function createChatRoomView(router: Navigo, roomId: string): View & {
   }
 
   // ✅ 프로필 변경 이벤트만 구독
-  const onMyProfileChange = () => chatProfileService.preload([myAccount]);
+  const onMyProfileChange = async () => {
+    const addr = getAddress(myAccount);
+    const profile = profileService.getCached(addr);
+    const prev = chatProfileService.getCached(addr);
+    chatProfileService.setProfile(getAddress(addr), profile?.nickname ?? undefined, prev?.profileImage ?? undefined);
+  };
   profileService.addEventListener('myprofilechange', onMyProfileChange);
 
   // 기존 메인 NFT 선택 로직 유지
@@ -79,8 +86,20 @@ function createChatRoomView(router: Navigo, roomId: string): View & {
           },
           onSelected: async (contractAddr: string, tokenId: string) => {
             await setMainNft({ room: roomId, contractAddr, tokenId });
+
             // 아바타가 메인 NFT로 바뀌는 UX가 있다면, 서버 기준으로 재동기화만 수행
-            chatProfileService.preload([account]);
+            const nftRows = await fetchMainNftsWithInfo(roomId, [myAccount]);
+
+            const imageMap = new Map<string, string | null>();
+            for (const row of nftRows) {
+              const addr = getAddress(row.user_address);
+              imageMap.set(addr, row.nft?.image ?? null);
+            }
+
+            for (const addr of [myAccount]) {
+              const prev = chatProfileService.getCached(addr);
+              chatProfileService.setProfile(getAddress(addr), prev?.nickname ?? undefined, imageMap.get(addr) ?? undefined);
+            }
           },
           labels: {
             title: '메인 NFT 선택',
