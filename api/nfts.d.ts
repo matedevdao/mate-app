@@ -10,6 +10,7 @@ export type HeldNft = {
 };
 export type FetchHeldNftsOptions = {
     collection?: string;
+    room?: string;
     start?: number;
     end?: number;
     cursor?: string;
