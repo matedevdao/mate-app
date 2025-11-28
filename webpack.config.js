@@ -6,7 +6,7 @@ module.exports = {
   entry: './src/main.ts',
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, './public')
+    path: path.resolve(__dirname, process.env.NODE_ENV === 'production' ? './public' : './public-dev')
   },
   module: {
     rules: [
