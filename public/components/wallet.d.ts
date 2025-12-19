@@ -32,6 +32,7 @@ declare const publicClient: {
     createPendingTransactionFilter: () => Promise<import("viem").CreatePendingTransactionFilterReturnType>;
     estimateContractGas: <chain extends import("wagmi/chains").Chain | undefined, const abi extends import("viem").Abi | readonly unknown[], functionName extends import("viem").ContractFunctionName<abi, "nonpayable" | "payable">, args extends import("viem").ContractFunctionArgs<abi, "nonpayable" | "payable", functionName>>(args: import("viem").EstimateContractGasParameters<abi, functionName, args, chain>) => Promise<import("viem").EstimateContractGasReturnType>;
     estimateGas: (args: import("viem").EstimateGasParameters<any>) => Promise<import("viem").EstimateGasReturnType>;
+    fillTransaction: <chainOverride extends import("wagmi/chains").Chain | undefined = undefined, accountOverride extends import("viem").Account | import("viem").Address | undefined = undefined>(args: import("viem").FillTransactionParameters<any, import("viem").Account | undefined, chainOverride, accountOverride>) => Promise<import("viem").FillTransactionReturnType<any, chainOverride>>;
     getBalance: (args: import("viem").GetBalanceParameters) => Promise<import("viem").GetBalanceReturnType>;
     getBlobBaseFee: () => Promise<import("viem").GetBlobBaseFeeReturnType>;
     getBlock: <includeTransactions extends boolean = false, blockTag extends import("viem").BlockTag = "latest">(args?: import("viem").GetBlockParameters<includeTransactions, blockTag> | undefined) => Promise<{
