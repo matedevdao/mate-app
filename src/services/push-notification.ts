@@ -15,6 +15,7 @@ const FIREBASE_CONFIG = {
 declare const VAPID_PUBLIC_KEY: string;
 
 const FCM_TOKEN_KEY = 'fcm_token';
+const BASE_PATH = process.env.NODE_ENV === 'production' ? '/mate-app/' : '/';
 
 class PushNotificationService {
   private app: FirebaseApp | null = null;
@@ -75,11 +76,47 @@ class PushNotificationService {
 
     if (!this.messaging) {
       console.error('Messaging not initialized');
-      return null;
+      throw new Error('Firebase Messaging을 초기화할 수 없습니다.');
     }
 
+    // Service Worker 명시적 등록 (서브디렉토리 경로 지원)
+    const getServiceWorkerRegistration = async (): Promise<ServiceWorkerRegistration> => {
+      const swPath = `${BASE_PATH}firebase-messaging-sw.js`;
+
+      // 먼저 기존 등록된 SW 확인
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      const existingSW = registrations.find(r => r.active?.scriptURL.includes('firebase-messaging-sw.js'));
+      if (existingSW) {
+        return existingSW;
+      }
+
+      // SW 등록
+      try {
+        const registration = await navigator.serviceWorker.register(swPath, {
+          scope: BASE_PATH,
+        });
+        console.log('[Push] Service Worker registered:', swPath);
+
+        // SW가 활성화될 때까지 대기
+        if (registration.installing) {
+          await new Promise<void>((resolve) => {
+            registration.installing!.addEventListener('statechange', function handler(e) {
+              if ((e.target as ServiceWorker).state === 'activated') {
+                resolve();
+              }
+            });
+          });
+        }
+
+        return registration;
+      } catch (err) {
+        console.error('[Push] Service Worker registration failed:', err);
+        throw new Error('Service Worker 등록에 실패했습니다.');
+      }
+    };
+
     try {
-      const registration = await navigator.serviceWorker.ready;
+      const registration = await getServiceWorkerRegistration();
 
       const vapidKey = typeof VAPID_PUBLIC_KEY !== 'undefined' ? VAPID_PUBLIC_KEY : undefined;
 
@@ -99,11 +136,10 @@ class PushNotificationService {
         return token;
       }
 
-      console.warn('No registration token available');
-      return null;
+      throw new Error('FCM 토큰을 가져올 수 없습니다.');
     } catch (err) {
       console.error('Failed to get FCM token:', err);
-      return null;
+      throw err;
     }
   }
 

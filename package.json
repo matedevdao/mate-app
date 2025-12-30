@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "build": "NODE_ENV=production webpack --mode=production",
+    "build": "NODE_ENV=production webpack --mode=production && cd firebase-messaging-sw && NODE_ENV=production webpack --mode=production",
     "dev": "NODE_ENV=development webpack serve --watch --mode=development",
     "start": "NODE_ENV=development webpack serve --watch --mode=development",
     "test": "vitest",
