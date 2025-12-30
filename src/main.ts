@@ -2,10 +2,9 @@ import { chatProfileService } from '@gaiaprotocol/chat-client';
 import { tokenManager } from '@gaiaprotocol/client-common';
 import { BackButtonEvent, setupConfig } from '@ionic/core';
 import { defineCustomElements } from '@ionic/core/loader';
-import { initializeApp } from 'firebase/app';
-import { getMessaging /*, getToken*/ } from 'firebase/messaging';
 import Navigo from 'navigo';
 import { getAddress } from 'viem';
+import { pushNotificationService } from './services/push-notification';
 
 // ===== New auth/link APIs pulled from Valhalla =====
 import { validateToken } from './auth/validate';
@@ -91,40 +90,16 @@ const isWebView = urlParams.get('source') === 'webview';
 // ------------------------------
 // Notifications (optional & lazy)
 // ------------------------------
-function initFirebaseAndMessaging() {
-  const firebaseConfig = {
-    apiKey: 'AIzaSyBbwkLP-C61kWmzCq-pFdvSJXHHUjmoRK0',
-    authDomain: 'mate-ba361.firebaseapp.com',
-    projectId: 'mate-ba361',
-    storageBucket: 'mate-ba361.firebasestorage.app',
-    messagingSenderId: '996341622273',
-    appId: '1:996341622273:web:f1a110eea9820b30ad8200',
-    measurementId: 'G-1V0KFDFZTF'
-  } as const;
-
-  const app = initializeApp(firebaseConfig);
-  let messaging;
-  try {
-    messaging = getMessaging(app);
-  } catch (err) {
-    console.error('Failed to initialize Firebase Messaging', err);
-  }
-  return { app, messaging };
-}
-
-async function requestNotificationPermission(): Promise<NotificationPermission> {
-  try {
-    return await Notification.requestPermission();
-  } catch {
-    return new Promise((resolve) => {
-      Notification.requestPermission((perm: NotificationPermission) => resolve(perm));
-    });
-  }
-}
-
 if (!isWebView) {
-  // Lazy init; keep side-effects minimal
-  initFirebaseAndMessaging();
+  pushNotificationService.init().then(async () => {
+    if (pushNotificationService.isPermissionGranted() && pushNotificationService.getStoredToken()) {
+      try {
+        await pushNotificationService.registerToken();
+      } catch (err) {
+        console.error('Failed to re-register push token:', err);
+      }
+    }
+  });
 }
 
 // ------------------------------

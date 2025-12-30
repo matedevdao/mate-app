@@ -65,6 +65,9 @@ module.exports = {
         process.env.NODE_ENV === 'production'
           ? 'https://nft-api.matedevdao.workers.dev'
           : 'http://localhost:8082'
+      ),
+      VAPID_PUBLIC_KEY: JSON.stringify(
+        process.env.VAPID_PUBLIC_KEY || ''
       )
     })
   ],
