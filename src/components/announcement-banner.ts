@@ -21,7 +21,8 @@ function createAnnouncementBanner(): Component {
     const card = el('ion-card', {
       color: 'warning',
       style: {
-        margin: '0 0 8px 0',
+        margin: '16px 16px 0 16px',
+        borderRadius: '12px',
         cursor: announcement.link_url ? 'pointer' : 'default',
       }
     });

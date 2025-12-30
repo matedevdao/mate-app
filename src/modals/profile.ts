@@ -7,6 +7,7 @@ import { oauth2MeByToken, oauthUnlinkWalletByToken } from "../auth/oauth2";
 import { launchInstallFlow } from "../components/install-ui";
 import { isMobile, isStandalone, isWebView } from "../platform";
 import { profileService } from "../services/profile";
+import { pushNotificationService } from "../services/push-notification";
 import { shortenAddress } from "../utils/address";
 import { createProfileFormModal } from "./profile-form";
 import { fetchMyMainNft, setMainNft } from "../api/main-nft";
@@ -59,6 +60,93 @@ export function createInstallAppItem(): HTMLElement | null {
   },
     el('ion-icon', { slot: 'start', name: 'download' }),
     el('ion-label', '앱 설치')
+  );
+}
+
+export function createPushNotificationItem(
+  showToast: (msg: string) => Promise<void>,
+  withLoading: <T>(fn: () => Promise<T>, msg?: string) => Promise<T>
+): HTMLElement {
+  // WebView 환경에서는 숨김
+  if (isWebView) {
+    const hidden = el('div', { style: { display: 'none' } });
+    return hidden;
+  }
+
+  const toggle = el('ion-toggle', { slot: 'end' }) as HTMLIonToggleElement;
+  const noteEl = el('p', { style: { fontSize: '0.85em', color: 'var(--ion-color-medium)' } }, '공지 및 업데이트 알림을 받습니다.');
+
+  // 초기 상태 설정
+  const updateToggleState = () => {
+    const permission = Notification.permission;
+    const hasToken = !!pushNotificationService.getStoredToken();
+
+    if (permission === 'denied') {
+      toggle.disabled = true;
+      toggle.checked = false;
+      noteEl.textContent = '브라우저 설정에서 알림이 차단되어 있습니다.';
+      noteEl.style.color = 'var(--ion-color-warning)';
+    } else if (!('Notification' in window)) {
+      toggle.disabled = true;
+      toggle.checked = false;
+      noteEl.textContent = '이 브라우저에서는 푸시 알림을 지원하지 않습니다.';
+      noteEl.style.color = 'var(--ion-color-medium)';
+    } else {
+      toggle.disabled = false;
+      toggle.checked = permission === 'granted' && hasToken;
+      noteEl.textContent = '공지 및 업데이트 알림을 받습니다.';
+      noteEl.style.color = 'var(--ion-color-medium)';
+    }
+  };
+
+  updateToggleState();
+
+  toggle.addEventListener('ionChange', async (event: CustomEvent) => {
+    const enabled = event.detail.checked;
+
+    if (enabled) {
+      try {
+        await withLoading(async () => {
+          const permission = await pushNotificationService.requestPermission();
+          if (permission !== 'granted') {
+            toggle.checked = false;
+            if (permission === 'denied') {
+              noteEl.textContent = '브라우저 설정에서 알림이 차단되어 있습니다.';
+              noteEl.style.color = 'var(--ion-color-warning)';
+              toggle.disabled = true;
+            }
+            return;
+          }
+          await pushNotificationService.registerToken();
+        }, '알림 설정 중...');
+        await showToast('푸시 알림이 활성화되었습니다.');
+        updateToggleState();
+      } catch (err) {
+        console.error('푸시 알림 활성화 실패:', err);
+        toggle.checked = false;
+        await showToast('푸시 알림 활성화에 실패했습니다.');
+      }
+    } else {
+      try {
+        await withLoading(async () => {
+          await pushNotificationService.unregisterToken();
+        }, '알림 해제 중...');
+        await showToast('푸시 알림이 비활성화되었습니다.');
+        updateToggleState();
+      } catch (err) {
+        console.error('푸시 알림 비활성화 실패:', err);
+        await showToast('푸시 알림 비활성화에 실패했습니다.');
+      }
+    }
+  });
+
+  return el('ion-item',
+    el('ion-icon', { slot: 'start', name: 'notifications' }),
+    el('ion-label',
+      el('h2', '푸시 알림'),
+      noteEl
+    ),
+    toggle
   );
 }
 
@@ -264,6 +352,7 @@ function createProfileModal(router: Navigo): HTMLElement {
       )),
 
       createInstallAppItem(),
+      createPushNotificationItem(showToast, withLoading),
       createContactUsItem(),
 
       menuItem('log-out', '로그아웃', '', async () => {
