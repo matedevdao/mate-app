@@ -84,7 +84,9 @@ export function createPushNotificationItem(
     if (permission === 'denied') {
       toggle.disabled = true;
       toggle.checked = false;
-      noteEl.textContent = '브라우저 설정에서 알림이 차단되어 있습니다.';
+      noteEl.textContent = isStandalone
+        ? '앱 설정에서 알림이 차단되어 있습니다. 기기 설정 > 이 앱 > 알림에서 허용해주세요.'
+        : '브라우저 설정에서 알림이 차단되어 있습니다. 주소창의 잠금 아이콘을 클릭하여 알림을 허용해주세요.';
       noteEl.style.color = 'var(--ion-color-warning)';
     } else if (!('Notification' in window)) {
       toggle.disabled = true;
@@ -111,7 +113,9 @@ export function createPushNotificationItem(
           if (permission !== 'granted') {
             toggle.checked = false;
             if (permission === 'denied') {
-              noteEl.textContent = '브라우저 설정에서 알림이 차단되어 있습니다.';
+              noteEl.textContent = isStandalone
+                ? '앱 설정에서 알림이 차단되어 있습니다. 기기 설정 > 이 앱 > 알림에서 허용해주세요.'
+                : '브라우저 설정에서 알림이 차단되어 있습니다. 주소창의 잠금 아이콘을 클릭하여 알림을 허용해주세요.';
               noteEl.style.color = 'var(--ion-color-warning)';
               toggle.disabled = true;
             }

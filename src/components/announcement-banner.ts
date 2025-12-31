@@ -10,9 +10,126 @@ function createAnnouncementBanner(): Component {
     }
   });
 
-  let currentIndex = 0;
   let announcements: Announcement[] = [];
-  let rotationInterval: number | undefined;
+
+  const showAnnouncementDetail = (announcement: Announcement) => {
+    const modal = document.createElement('ion-modal');
+    modal.classList.add('announcement-detail-modal');
+
+    const header = el('ion-header', {},
+      el('ion-toolbar', {},
+        el('ion-title', {}, '공지사항'),
+        el('ion-buttons', { slot: 'end' },
+          announcements.length > 1 ? el('ion-button', {
+            onclick: () => {
+              modal.dismiss();
+              showAnnouncementList();
+            },
+          }, '목록') : null,
+          el('ion-button', {
+            onclick: () => modal.dismiss(),
+          }, el('ion-icon', { name: 'close' }))
+        )
+      )
+    );
+
+    const contentEl = el('ion-content', {
+      className: 'ion-padding',
+    });
+
+    const titleEl = el('h2', {
+      style: {
+        fontWeight: '600',
+        fontSize: '18px',
+        marginBottom: '12px',
+      }
+    }, announcement.title);
+
+    const bodyEl = el('div', {
+      style: {
+        fontSize: '14px',
+        lineHeight: '1.6',
+        whiteSpace: 'pre-wrap',
+      }
+    }, announcement.content);
+
+    contentEl.append(titleEl, bodyEl);
+
+    if (announcement.link_url) {
+      const linkButton = el('ion-button', {
+        expand: 'block',
+        style: { marginTop: '20px' },
+        onclick: () => window.open(announcement.link_url, '_blank'),
+      }, '링크 열기');
+      contentEl.append(linkButton);
+    }
+
+    modal.append(header, contentEl);
+    document.body.append(modal);
+    modal.present();
+  };
+
+  const showAnnouncementList = () => {
+    const modal = document.createElement('ion-modal');
+    modal.classList.add('announcement-list-modal');
+
+    const header = el('ion-header', {},
+      el('ion-toolbar', {},
+        el('ion-title', {}, '공지사항 목록'),
+        el('ion-buttons', { slot: 'end' },
+          el('ion-button', {
+            onclick: () => modal.dismiss(),
+          }, el('ion-icon', { name: 'close' }))
+        )
+      )
+    );
+
+    const contentEl = el('ion-content', {});
+
+    const list = el('ion-list', {});
+
+    announcements.forEach((announcement) => {
+      const item = el('ion-item', {
+        button: true,
+        detail: true,
+        onclick: () => {
+          modal.dismiss();
+          showAnnouncementDetail(announcement);
+        },
+      });
+
+      const label = el('ion-label', {});
+
+      const titleEl = el('h3', {
+        style: {
+          fontWeight: '600',
+          fontSize: '14px',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+        }
+      }, announcement.title.replace(/\n/g, ' '));
+
+      const contentText = el('p', {
+        style: {
+          fontSize: '12px',
+          opacity: '0.7',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+        }
+      }, announcement.content.replace(/\n/g, ' '));
+
+      label.append(titleEl, contentText);
+      item.append(label);
+      list.append(item);
+    });
+
+    contentEl.append(list);
+    modal.append(header, contentEl);
+    document.body.append(modal);
+    modal.present();
+  };
 
   const renderAnnouncement = (announcement: Announcement) => {
     container.innerHTML = '';
@@ -23,13 +140,11 @@ function createAnnouncementBanner(): Component {
       style: {
         margin: '16px 16px 0 16px',
         borderRadius: '12px',
-        cursor: announcement.link_url ? 'pointer' : 'default',
+        cursor: 'pointer',
       }
     });
 
-    if (announcement.link_url) {
-      card.onclick = () => window.open(announcement.link_url, '_blank');
-    }
+    card.onclick = () => showAnnouncementDetail(announcement);
 
     const cardContent = el('ion-card-content', {
       style: {
@@ -61,7 +176,7 @@ function createAnnouncementBanner(): Component {
         overflow: 'hidden',
         textOverflow: 'ellipsis',
       }
-    }, announcement.title);
+    }, announcement.title.replace(/\n/g, ' '));
 
     const content = el('div', {
       style: {
@@ -72,47 +187,26 @@ function createAnnouncementBanner(): Component {
         textOverflow: 'ellipsis',
         marginTop: '2px',
       }
-    }, announcement.content);
+    }, announcement.content.replace(/\n/g, ' '));
 
     textWrapper.append(title, content);
     cardContent.append(icon, textWrapper);
 
     if (announcements.length > 1) {
-      const indicator = el('div', {
-        style: {
-          fontSize: '11px',
-          opacity: '0.6',
-          flexShrink: '0',
-        }
-      }, `${currentIndex + 1}/${announcements.length}`);
-      cardContent.append(indicator);
-    }
-
-    if (announcement.link_url) {
-      const arrow = el('ion-icon', {
-        name: 'chevron-forward-outline',
-        style: { fontSize: '16px', flexShrink: '0' },
-      });
-      cardContent.append(arrow);
+      const listButton = el('ion-button', {
+        fill: 'clear',
+        size: 'small',
+        color: 'dark',
+        onclick: (e: Event) => {
+          e.stopPropagation();
+          showAnnouncementList();
+        },
+      }, '목록');
+      cardContent.append(listButton);
     }
 
     card.append(cardContent);
     container.append(card);
-  };
-
-  const startRotation = () => {
-    if (announcements.length <= 1) return;
-    rotationInterval = window.setInterval(() => {
-      currentIndex = (currentIndex + 1) % announcements.length;
-      renderAnnouncement(announcements[currentIndex]);
-    }, 5000);
-  };
-
-  const stopRotation = () => {
-    if (rotationInterval) {
-      clearInterval(rotationInterval);
-      rotationInterval = undefined;
-    }
   };
 
   fetchAnnouncements()
@@ -120,7 +214,6 @@ function createAnnouncementBanner(): Component {
       announcements = data;
       if (announcements.length > 0) {
         renderAnnouncement(announcements[0]);
-        startRotation();
       }
     })
     .catch((err) => {
@@ -130,7 +223,6 @@ function createAnnouncementBanner(): Component {
   return {
     el: container,
     remove() {
-      stopRotation();
       container.remove();
     },
   };
